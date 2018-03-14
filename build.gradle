@@ -41,6 +41,7 @@ ext {
     materialStepperVersion = '0.2.3'
     aboutPageVersion = '1.2.2'
     aboutLibrariesVersion = '6.0.6'
+    JUnitVersion = '4.12'
 }
 
 task clean(type: Delete) {
