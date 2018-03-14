@@ -1,0 +1,84 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:itemBackground">@color/colorWhite</item>
+        <item name="android:textColor">@color/colorBlack</item>
+    </style>
+
+
+    <!-- Splash Screen Theme -->
+    <style name="AppTheme.Launcher" parent="AppTheme">
+        <item name="android:windowBackground">@drawable/splash_screen_background</item>
+    </style>
+
+
+    <!-- Toolbar Header Theme -->
+    <style name="ToolbarHeaderAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Title"/>
+    <style name="ToolbarHeaderAppearance.Title">
+        <item name="android:text">@string/app_name</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:gravity">start</item>
+        <item name="android:textSize">@dimen/sp18</item>
+        <item name="android:paddingStart">@dimen/dp8</item>
+    </style>
+
+
+    <!-- CardView Theme -->
+    <style name="RecipeCardViewAppearance">
+        <item name="cardBackgroundColor">@color/colorPrimaryDark</item>
+       <item name="android:shape">rectangle</item>
+        <item name="contentPadding">0.5dp</item>
+    </style>
+
+
+    <!-- Recipe ProgressBar Theme -->
+    <style name="RecipeProgressBarAppearance">
+        <item name="android:indeterminate">true</item>
+        <item name="android:visibility">visible</item>
+        <item name="android:indeterminateTint">@color/colorPrimary</item>
+    </style>
+
+
+    <!-- Recipe ImageView Theme -->
+    <style name="RecipeImageViewAppearance">
+        <item name="android:scaleType">centerCrop</item>
+    </style>
+
+
+    <!-- RecipeCard Text Theme-->
+    <style name="RecipeCardTextAppearance"/>
+    <style name="RecipeCardTextAppearance.ItemRow">
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:minHeight">25dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/sp20</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:lines">1</item>
+        <item name="android:paddingStart">@dimen/dp8</item>
+        <item name="android:paddingEnd">@dimen/dp8</item>
+    </style>
+
+
+    <!-- Vertical Stepper Button Theme -->
+    <style name="StepperButtonApperance">
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">@dimen/sp14</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+</resources>

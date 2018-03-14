@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="dp4">4dp</dimen>
+    <dimen name="dp8">8dp</dimen>
+    <dimen name="dp16">16dp</dimen>
+    <dimen name="sp20">20sp</dimen>
+    <dimen name="sp18">18sp</dimen>
+    <dimen name="sp16">16sp</dimen>
+    <dimen name="sp14">14sp</dimen>
+    <dimen name="expandedTitleMarginEnd">64dp</dimen>
+    <dimen name="expandedTitleMarginStart">48dp</dimen>
+</resources>

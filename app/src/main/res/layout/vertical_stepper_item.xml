@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <Button
+            android:id="@+id/vsiButtonNext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/colorPrimary"
+            android:text="@string/steps_go"
+            style="@style/StepperButtonApperance"/>
+
+            <Button
+                android:id="@+id/vsiButtonPrev"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/steps_go_back"
+                style="@style/StepperButtonApperance"/>
+
+</LinearLayout>

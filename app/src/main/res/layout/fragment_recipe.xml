@@ -1,0 +1,25 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+<RelativeLayout
+    android:id="@+id/flRecipes"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.nuhkoca.udacitybakingapp.view.recipe.fragment.RecipeFragment">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvRecipes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <ProgressBar
+        android:id="@+id/pbRecipes"
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true" />
+
+</RelativeLayout>
+</layout>
