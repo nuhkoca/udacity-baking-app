@@ -1,8 +1,12 @@
 <resources>
     <string name="app_name">Dream Pies</string>
 
-    <!-- ImageView Placeholder -->
+    <!-- Placeholders -->
     <string name="imageview_place_holder">This is a placeholder for ImageViews.</string>
+    <string name="serving_text_place_holder">%1$d servings</string>
+    <string name="step_title_place_holder">You are now watching the %1$s step.</string>
+    <string name="step_title_error_place_holder">There is no video found. It is enough that following the ingredients and description below!</string>
+    <string name="ingredients_counter_place_holder">%1$d ingredients</string>
 
     <!-- Error Messages -->
     <string name="no_recipe_found">There is no recipe found at the moment.</string>
@@ -13,10 +17,15 @@
     <string name="congrats_for_ingredient">Congratulations, you have done for %1$s!</string>
     <string name="you_are_up_to_date">You are up-to-date!</string>
 
+    <!-- Extra Recipe Step Text -->
+    <string name="first_step_text">Welcome!</string>
+    <string name="first_step_summary_text">You\'ll be learning how to prepare a %1$s</string>
+    <string name="last_step_text">Outro</string>
+    <string name="last_step_summary_text">Congratulations, you have done for %1$s</string>
 
     <!-- Toolbar Headers -->
     <string name="steps_header">Steps</string>
-    <string name="ingredients_header">Ingredients</string>
+    <string name="ingredients_header">%1$s Recipe</string>
 
     <!-- Button Texts -->
     <string name="steps_go">Go</string>
@@ -26,6 +35,13 @@
     <!-- Menu Texts -->
     <string name="about_menu_text">About</string>
     <string name="licence_menu_text">Licence</string>
+
+
+    <!-- Step & Ingredients Texts -->
+    <string name="ingredients_title">Ingredients</string>
+    <string name="quantity_label">Quantity:</string>
+    <string name="measure_label">Measure:</string>
+    <string name="ingredient_label">Ingredient:</string>
 
     <!-- About Texts -->
     <string name="copy_right" translatable="false">Copyrights © %1$d</string>

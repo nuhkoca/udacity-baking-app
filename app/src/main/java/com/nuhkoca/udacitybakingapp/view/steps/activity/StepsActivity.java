@@ -64,6 +64,11 @@ public class StepsActivity extends AppCompatActivity implements StepsActivityVie
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
+    @Override
     protected void onDestroy() {
         mStepsActivityPresenter.destroyView();
 

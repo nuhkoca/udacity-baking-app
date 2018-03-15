@@ -26,11 +26,17 @@
         <activity
             android:name=".view.steps.activity.StepsActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".view.recipe.activity.RecipeActivity" />
+            android:parentActivityName=".view.recipe.activity.RecipeActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"/>
         <activity
             android:name=".view.about.AboutActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".view.recipe.activity.RecipeActivity" />
+            android:parentActivityName=".view.recipe.activity.RecipeActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"/>
+        <activity
+            android:name=".view.ingredients.activity.IngredientsActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".view.steps.activity.StepsActivity" />
     </application>
 
 </manifest>

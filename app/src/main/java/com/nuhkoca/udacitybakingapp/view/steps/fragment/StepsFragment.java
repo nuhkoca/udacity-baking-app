@@ -2,6 +2,7 @@ package com.nuhkoca.udacitybakingapp.view.steps.fragment;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,13 +14,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.google.android.exoplayer2.C;
 import com.nuhkoca.udacitybakingapp.R;
 import com.nuhkoca.udacitybakingapp.databinding.FragmentStepsBinding;
 import com.nuhkoca.udacitybakingapp.helper.Constants;
 import com.nuhkoca.udacitybakingapp.model.RecipeResponse;
 import com.nuhkoca.udacitybakingapp.presenter.steps.fragment.StepsFragmentPresenter;
 import com.nuhkoca.udacitybakingapp.presenter.steps.fragment.StepsFragmentPresenterImpl;
-import com.nuhkoca.udacitybakingapp.util.SnackbarPopper;
+import com.nuhkoca.udacitybakingapp.view.ingredients.activity.IngredientsActivity;
 
 import moe.feng.common.stepperview.IStepperAdapter;
 import moe.feng.common.stepperview.VerticalStepperItemView;
@@ -33,6 +35,7 @@ public class StepsFragment extends Fragment implements StepsFragmentView, IStepp
     private FragmentStepsBinding mFragmentStepsBinding;
     private StepsFragmentPresenter mStepsFragmentPresenter;
     private RecipeResponse mRecipeResponse;
+    private int stepCount = 0;
 
     public static StepsFragment getInstance(RecipeResponse recipeResponse) {
         StepsFragment stepsFragment = new StepsFragment();
@@ -83,18 +86,34 @@ public class StepsFragment extends Fragment implements StepsFragmentView, IStepp
     @NonNull
     @Override
     public CharSequence getTitle(int i) {
-        return mRecipeResponse.getSteps().get(i).getShortDescription();
+        if (i == 0) {
+            return getString(R.string.first_step_text);
+        } else {
+            if (i != size() - 1) {
+                return mRecipeResponse.getSteps().get(i - 1).getShortDescription();
+            } else {
+                return getString(R.string.last_step_text);
+            }
+        }
     }
 
     @Nullable
     @Override
     public CharSequence getSummary(int i) {
-        return Html.fromHtml(mRecipeResponse.getSteps().get(i).getDescription());
+        if (i == 0) {
+            return Html.fromHtml(String.format(getString(R.string.first_step_summary_text), mRecipeResponse.getName()));
+        } else {
+            if (i != size() - 1) {
+                return Html.fromHtml(mRecipeResponse.getSteps().get(i - 1).getDescription());
+            } else {
+                return Html.fromHtml(String.format(getString(R.string.last_step_summary_text), mRecipeResponse.getName()));
+            }
+        }
     }
 
     @Override
     public int size() {
-        return mRecipeResponse.getSteps().size();
+        return (mRecipeResponse.getSteps().size() + 2);
     }
 
     @Override
@@ -102,22 +121,6 @@ public class StepsFragment extends Fragment implements StepsFragmentView, IStepp
         LayoutInflater layoutInflater = LayoutInflater.from(context);
 
         View inflateView = layoutInflater.inflate(R.layout.vertical_stepper_item, parent, false);
-
-        final Button nextButton = inflateView.findViewById(R.id.vsiButtonNext);
-        nextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mFragmentStepsBinding.vsvSteps.canNext()) {
-                    mFragmentStepsBinding.vsvSteps.nextStep();
-
-                    if (getActivity()!=null) {
-                        if (getActivity().findViewById(R.id.llTwoPaneMode) != null) {
-                        } else {
-                        }
-                    }
-                }
-            }
-        });
 
         final Button prevButton = inflateView.findViewById(R.id.vsiButtonPrev);
         prevButton.setOnClickListener(new View.OnClickListener() {
@@ -128,22 +131,44 @@ public class StepsFragment extends Fragment implements StepsFragmentView, IStepp
                 } else {
                     mFragmentStepsBinding.vsvSteps.setAnimationEnabled(!mFragmentStepsBinding.vsvSteps.isAnimationEnabled());
                 }
-
-                if (prevButton.getText().toString().equals(context.getString(R.string.steps_complete))) {
-                    SnackbarPopper.pop(mFragmentStepsBinding.vsvSteps,
-                            String.format(getString(R.string.congrats_for_ingredient), mRecipeResponse.getName()));
-                }
             }
         });
 
-        if (!mFragmentStepsBinding.vsvSteps.canNext()) {
-            prevButton.setText(getString(R.string.steps_complete));
-        }
+        Button nextButton = inflateView.findViewById(R.id.vsiButtonNext);
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mFragmentStepsBinding.vsvSteps.canNext()) {
+                    mFragmentStepsBinding.vsvSteps.nextStep();
+                    stepCount += 1;
+
+                    if (getActivity() != null) {
+                        if (getActivity().findViewById(R.id.llTwoPaneMode) != null) {
+                            return;
+                        } else {
+                            if (i != 0 && i != size() - 1) {
+                                Intent stepsIntent = new Intent(getActivity(), IngredientsActivity.class);
+                                stepsIntent.putExtra(Constants.RECIPE_MODEL_INTENT_EXTRA, mRecipeResponse);
+                                stepsIntent.putExtra(Constants.RECIPE_MODEL_STEPS_ID_INTENT_EXTRA, (i - 1));
+
+                                startActivityForResult(stepsIntent, Constants.CHILD_ACTIVITY_REQUEST_CODE);
+                            }
+                        }
+                    }
+                }
+            }
+        });
 
         if (i == 0) {
             prevButton.setVisibility(View.GONE);
         } else {
             prevButton.setVisibility(View.VISIBLE);
+        }
+
+
+        if (stepCount == (size() - 1)) {
+            prevButton.setVisibility(View.GONE);
+            nextButton.setText(getString(R.string.steps_complete));
         }
 
         return inflateView;

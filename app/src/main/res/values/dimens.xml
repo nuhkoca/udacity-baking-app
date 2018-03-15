@@ -3,6 +3,8 @@
     <dimen name="dp4">4dp</dimen>
     <dimen name="dp8">8dp</dimen>
     <dimen name="dp16">16dp</dimen>
+    <dimen name="dp24">24dp</dimen>
+    <dimen name="dp32">32dp</dimen>
     <dimen name="sp20">20sp</dimen>
     <dimen name="sp18">18sp</dimen>
     <dimen name="sp16">16sp</dimen>

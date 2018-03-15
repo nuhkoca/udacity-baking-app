@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.nuhkoca.udacitybakingapp.App;
 import com.nuhkoca.udacitybakingapp.BR;
 import com.nuhkoca.udacitybakingapp.R;
 import com.nuhkoca.udacitybakingapp.callback.IRecipeItemClickListener;
@@ -76,6 +77,9 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
         void bindViews(RecipeResponse recipeResponse) {
             mRecipeItemCardBinding.setVariable(BR.recipe, recipeResponse);
+            mRecipeItemCardBinding.setVariable(BR.formattedServings,
+                    String.format(App.getInstance().getString(R.string.serving_text_place_holder), recipeResponse.getServings()));
+
             mRecipeItemCardBinding.setVariable(BR.recipeListener, mIRecipeItemClickListener);
             mRecipeItemCardBinding.executePendingBindings();
         }

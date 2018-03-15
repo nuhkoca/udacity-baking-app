@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="steps"
+            type="com.nuhkoca.udacitybakingapp.model.Steps" />
+        <variable
+            name="formattedStepTitle"
+            type="String" />
+    </data>
+
+<android.support.v7.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    style="@style/IngredientsCardViewAppearance">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{formattedStepTitle}"
+            android:textStyle="italic"
+            style="@style/StepAppearance.Item"/>
+
+        <View
+            android:layout_width="50dp"
+            android:layout_height="1dp"
+            android:background="@color/colorPrimary"
+            android:layout_marginTop="@dimen/dp24"
+            android:layout_marginBottom="@dimen/dp8"
+            android:layout_gravity="center"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{steps.description}"
+            style="@style/StepAppearance.Item"/>
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>
+</layout>

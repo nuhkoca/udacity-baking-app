@@ -63,6 +63,11 @@ public class AboutActivity extends AppCompatActivity implements AboutActivityVie
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
+    @Override
     public void onInfoReady() {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
