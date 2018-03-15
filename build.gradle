@@ -42,6 +42,7 @@ ext {
     aboutPageVersion = '1.2.2'
     aboutLibrariesVersion = '6.0.6'
     JUnitVersion = '4.12'
+    materialDialogsVersion = '0.9.6.0'
 }
 
 task clean(type: Delete) {

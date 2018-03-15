@@ -36,12 +36,16 @@
     <string name="about_menu_text">About</string>
     <string name="licence_menu_text">Licence</string>
 
-
     <!-- Step & Ingredients Texts -->
     <string name="ingredients_title">Ingredients</string>
     <string name="quantity_label">Quantity:</string>
     <string name="measure_label">Measure:</string>
     <string name="ingredient_label">Ingredient:</string>
+
+    <!-- Dialog Texts -->
+    <string name="step_dialog_title">You are done!</string>
+    <string name="step_dialog_message">Congratulations! You have completed all the steps for %1$s</string>
+    <string name="step_dialog_button">Close</string>
 
     <!-- About Texts -->
     <string name="copy_right" translatable="false">Copyrights © %1$d</string>
@@ -81,7 +85,6 @@
         <item name="exo_player">ExoPlayer</item>
         <item name="material_stepper">MaterialStepperView</item>
     </string-array>
-
 
     <!-- Libraries Excluded -->
     <string-array name="libraries_excluded">

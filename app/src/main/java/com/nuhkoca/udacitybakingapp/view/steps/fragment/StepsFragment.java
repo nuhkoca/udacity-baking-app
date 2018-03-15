@@ -3,17 +3,22 @@ package com.nuhkoca.udacitybakingapp.view.steps.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
 import com.google.android.exoplayer2.C;
 import com.nuhkoca.udacitybakingapp.R;
 import com.nuhkoca.udacitybakingapp.databinding.FragmentStepsBinding;
@@ -22,6 +27,8 @@ import com.nuhkoca.udacitybakingapp.model.RecipeResponse;
 import com.nuhkoca.udacitybakingapp.presenter.steps.fragment.StepsFragmentPresenter;
 import com.nuhkoca.udacitybakingapp.presenter.steps.fragment.StepsFragmentPresenterImpl;
 import com.nuhkoca.udacitybakingapp.view.ingredients.activity.IngredientsActivity;
+
+import java.util.Objects;
 
 import moe.feng.common.stepperview.IStepperAdapter;
 import moe.feng.common.stepperview.VerticalStepperItemView;
@@ -134,7 +141,7 @@ public class StepsFragment extends Fragment implements StepsFragmentView, IStepp
             }
         });
 
-        Button nextButton = inflateView.findViewById(R.id.vsiButtonNext);
+        final Button nextButton = inflateView.findViewById(R.id.vsiButtonNext);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -155,6 +162,25 @@ public class StepsFragment extends Fragment implements StepsFragmentView, IStepp
                             }
                         }
                     }
+                }
+
+                if (Objects.equals(nextButton.getText().toString(), getString(R.string.steps_complete))) {
+                    new MaterialDialog.Builder(getActivity())
+                            .title(getString(R.string.step_dialog_title))
+                            .theme(Theme.LIGHT)
+                            .content(String.format(getString(R.string.step_dialog_message), mRecipeResponse.getName()))
+                            .positiveText(getString(R.string.step_dialog_button))
+                            .cancelable(false)
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .show();
+
+                    nextButton.setEnabled(false);
+                    nextButton.setBackgroundTintList(ContextCompat.getColorStateList(getActivity(), android.R.color.darker_gray));
                 }
             }
         });

@@ -129,6 +129,7 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
 
         mFragmentIngredientsBinding.rvIngredients.setNestedScrollingEnabled(false);
         mFragmentIngredientsBinding.rvIngredients.setHasFixedSize(true);
+        mFragmentIngredientsBinding.rvIngredients.setFocusable(false);
 
         IngredientsAdapter ingredientsAdapter = new IngredientsAdapter(mRecipeResponse.getIngredients());
         mFragmentIngredientsBinding.rvIngredients.setAdapter(ingredientsAdapter);

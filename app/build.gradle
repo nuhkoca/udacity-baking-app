@@ -44,6 +44,7 @@ dependencies {
     implementation("com.mikepenz:aboutlibraries:$rootProject.ext.aboutLibrariesVersion") {
         transitive = true
     }
+    implementation "com.afollestad.material-dialogs:core:$rootProject.ext.materialDialogsVersion"
 
     implementation "com.jakewharton.timber:timber:$rootProject.ext.glideLibraryVersion"
     implementation "com.github.bumptech.glide:glide:$rootProject.ext.glideLibraryVersion"
