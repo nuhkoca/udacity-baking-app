@@ -21,7 +21,11 @@ public class Constants {
     public static final String NUTELLA_PIE_CASE = "Nutella Pie";
     public static final String BROWNIES_CASE = "Brownies";
     public static final String YELLOW_CAKE_CASE = "Yellow Cake";
-    public static final String CHEESECAKE_CASE = "Cheesecake";
+    public static final String CHEESECAKE_CASE= "Cheesecake";
+    public static final int TABLET_DIVIDER = 1000;
+    public static final String EXO_PLAYER_VIDEO_POSITION = "exo-player-video-position";
+    public static int SCREEN_WIDTH_PIXEL_CONDITION = 1440;
+    public static String FRAGMENT_ORDER = "fragment - order";
 
     public Constants() {
         throw new AssertionError();

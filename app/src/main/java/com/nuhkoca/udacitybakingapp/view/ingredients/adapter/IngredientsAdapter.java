@@ -13,9 +13,12 @@ import android.view.ViewGroup;
 import com.nuhkoca.udacitybakingapp.BR;
 import com.nuhkoca.udacitybakingapp.R;
 import com.nuhkoca.udacitybakingapp.databinding.IngredientsItemCardBinding;
+import com.nuhkoca.udacitybakingapp.helper.Constants;
 import com.nuhkoca.udacitybakingapp.model.Ingredients;
 
 import java.util.List;
+
+import timber.log.Timber;
 
 /**
  * Created by nuhkoca on 3/15/18.
@@ -88,12 +91,13 @@ public class IngredientsAdapter extends RecyclerView.Adapter<IngredientsAdapter.
                 return;
             }
 
-            if (displayMetrics.widthPixels <= 1440) {
+            if (displayMetrics.widthPixels <= Constants.SCREEN_WIDTH_PIXEL_CONDITION) {
                 layoutParams.width = (int) (displayMetrics.widthPixels / (1.5));
             } else {
-                layoutParams.width = displayMetrics.widthPixels / (2);
+                layoutParams.width = (int) (displayMetrics.widthPixels / (2.5));
             }
 
+            Timber.d(String.valueOf(displayMetrics.widthPixels));
             mIngredientsItemBinding.cvIngredients.setLayoutParams(layoutParams);
         }
     }

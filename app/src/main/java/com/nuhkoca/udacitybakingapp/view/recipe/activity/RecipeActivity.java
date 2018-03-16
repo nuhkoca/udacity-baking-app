@@ -1,6 +1,7 @@
 package com.nuhkoca.udacitybakingapp.view.recipe.activity;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,7 +10,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.nuhkoca.udacitybakingapp.ErrorFragment;
 import com.nuhkoca.udacitybakingapp.R;
+import com.nuhkoca.udacitybakingapp.callback.IErrorCallbackListener;
 import com.nuhkoca.udacitybakingapp.databinding.ActivityRecipeBinding;
 import com.nuhkoca.udacitybakingapp.helper.Constants;
 import com.nuhkoca.udacitybakingapp.presenter.recipe.activity.RecipeActivityPresenter;
@@ -17,7 +20,7 @@ import com.nuhkoca.udacitybakingapp.presenter.recipe.activity.RecipeActivityPres
 import com.nuhkoca.udacitybakingapp.view.about.AboutActivity;
 import com.nuhkoca.udacitybakingapp.view.recipe.fragment.RecipeFragment;
 
-public class RecipeActivity extends AppCompatActivity implements RecipeActivityView {
+public class RecipeActivity extends AppCompatActivity implements RecipeActivityView, IErrorCallbackListener {
 
     private ActivityRecipeBinding mActivityRecipeBinding;
     private RecipeActivityPresenter mRecipeActivityPresenter;
@@ -40,7 +43,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeActivityV
     @Override
     public void onFragmentAttached() {
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.flRecipesHolder, RecipeFragment.getInstance())
+                .add(R.id.flRecipesHolder, RecipeFragment.getInstance(this))
                 .commit();
     }
 
@@ -99,5 +102,26 @@ public class RecipeActivity extends AppCompatActivity implements RecipeActivityV
     protected void onDestroy() {
         mRecipeActivityPresenter.destroyView();
         super.onDestroy();
+    }
+
+    @Override
+    public void onErrorScreenShown(boolean visible) {
+        if (visible) {
+            if (getResources().getBoolean(R.bool.isTablet)) {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            } else {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            }
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.flRecipesHolder, ErrorFragment.getInstance(this))
+                    .commit();
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.flRecipesHolder, RecipeFragment.getInstance(this))
+                    .commit();
+        }
     }
 }

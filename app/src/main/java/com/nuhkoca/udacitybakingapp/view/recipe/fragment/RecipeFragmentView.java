@@ -9,9 +9,11 @@ import java.util.List;
  */
 
 public interface RecipeFragmentView {
-    void onRecipesFetchingSuccess(List<RecipeResponse> recipeResponses);
+    void onRecipesLoaded(List<RecipeResponse> recipeResponses);
 
-    void onRecipesFetchingError(String message);
+    void onRecipesLoadingFailed(String message);
+
+    void onScreenRotated();
 
     void onProgressVisibility(boolean visible);
 }

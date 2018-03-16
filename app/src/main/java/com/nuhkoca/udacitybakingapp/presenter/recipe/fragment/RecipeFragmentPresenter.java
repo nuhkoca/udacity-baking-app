@@ -7,5 +7,7 @@ package com.nuhkoca.udacitybakingapp.presenter.recipe.fragment;
 public interface RecipeFragmentPresenter {
     void fetchRecipes();
 
+    void behaveAfterRotation();
+
     void destroyView();
 }

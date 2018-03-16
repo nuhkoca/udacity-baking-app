@@ -6,9 +6,16 @@
     <dimen name="dp24">24dp</dimen>
     <dimen name="dp32">32dp</dimen>
     <dimen name="sp20">20sp</dimen>
+    <dimen name="sp24">24sp</dimen>
     <dimen name="sp18">18sp</dimen>
     <dimen name="sp16">16sp</dimen>
     <dimen name="sp14">14sp</dimen>
     <dimen name="expandedTitleMarginEnd">64dp</dimen>
     <dimen name="expandedTitleMarginStart">48dp</dimen>
+
+    <!--
+Refer to App Widget Documentation for margin information
+http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
+    -->
+    <dimen name="widget_margin">8dp</dimen>
 </resources>

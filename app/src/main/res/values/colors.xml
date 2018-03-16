@@ -6,4 +6,5 @@
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorBlack">#000000</color>
     <color name="exoPlayerTimeBarColor">#2196F3</color>
+    <color name="connectionIssueIconColor">#D2D5DA</color>
 </resources>

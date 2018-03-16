@@ -52,11 +52,11 @@ public class RecipeFragmentPresenterImpl implements RecipeFragmentPresenter {
                     @Override
                     public void onError(Throwable e) {
                         if (e instanceof NetworkErrorException) {
-                            mRecipeFragmentView.onRecipesFetchingError(App.getInstance().getString(R.string.no_connection_found));
+                            mRecipeFragmentView.onRecipesLoadingFailed(App.getInstance().getString(R.string.no_connection_found));
                         } else if (e instanceof HttpException) {
-                            mRecipeFragmentView.onRecipesFetchingError(App.getInstance().getString(R.string.no_connection_found));
+                            mRecipeFragmentView.onRecipesLoadingFailed(App.getInstance().getString(R.string.no_connection_found));
                         } else {
-                            mRecipeFragmentView.onRecipesFetchingError(App.getInstance().getString(R.string.no_recipe_found));
+                            mRecipeFragmentView.onRecipesLoadingFailed(App.getInstance().getString(R.string.no_recipe_found));
                         }
 
                         mRecipeFragmentView.onProgressVisibility(false);
@@ -65,15 +65,20 @@ public class RecipeFragmentPresenterImpl implements RecipeFragmentPresenter {
                     @Override
                     public void onNext(List<RecipeResponse> recipeResponses) {
                         if (recipeResponses.size() == 0) {
-                            mRecipeFragmentView.onRecipesFetchingError(App.getInstance().getString(R.string.no_recipe_found));
+                            mRecipeFragmentView.onRecipesLoadingFailed(App.getInstance().getString(R.string.no_recipe_found));
                             mRecipeFragmentView.onProgressVisibility(false);
                             return;
                         }
 
-                        mRecipeFragmentView.onRecipesFetchingSuccess(recipeResponses);
+                        mRecipeFragmentView.onRecipesLoaded(recipeResponses);
                         mRecipeFragmentView.onProgressVisibility(false);
                     }
                 });
+    }
+
+    @Override
+    public void behaveAfterRotation() {
+        mRecipeFragmentView.onScreenRotated();
     }
 
     @Override

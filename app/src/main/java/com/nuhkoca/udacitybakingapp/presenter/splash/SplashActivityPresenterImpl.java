@@ -13,6 +13,7 @@ import com.nuhkoca.udacitybakingapp.view.splash.SplashActivityView;
 public class SplashActivityPresenterImpl implements SplashActivityPresenter {
 
     private SplashActivityView mSplashActivityView;
+    private int mDuration;
 
     public SplashActivityPresenterImpl(SplashActivityView mSplashActivityView) {
         this.mSplashActivityView = mSplashActivityView;

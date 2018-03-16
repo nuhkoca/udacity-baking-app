@@ -2,8 +2,6 @@ package com.nuhkoca.udacitybakingapp.view.steps.fragment;
 
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,20 +17,18 @@ import android.widget.Button;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
-import com.google.android.exoplayer2.C;
 import com.nuhkoca.udacitybakingapp.R;
+import com.nuhkoca.udacitybakingapp.callback.IStepTabletCallbackListener;
 import com.nuhkoca.udacitybakingapp.databinding.FragmentStepsBinding;
 import com.nuhkoca.udacitybakingapp.helper.Constants;
 import com.nuhkoca.udacitybakingapp.model.RecipeResponse;
 import com.nuhkoca.udacitybakingapp.presenter.steps.fragment.StepsFragmentPresenter;
 import com.nuhkoca.udacitybakingapp.presenter.steps.fragment.StepsFragmentPresenterImpl;
-import com.nuhkoca.udacitybakingapp.view.ingredients.activity.IngredientsActivity;
 
 import java.util.Objects;
 
 import moe.feng.common.stepperview.IStepperAdapter;
 import moe.feng.common.stepperview.VerticalStepperItemView;
-import timber.log.Timber;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,8 +40,12 @@ public class StepsFragment extends Fragment implements StepsFragmentView, IStepp
     private RecipeResponse mRecipeResponse;
     private int stepCount = 0;
 
-    public static StepsFragment getInstance(RecipeResponse recipeResponse) {
+    private static IStepTabletCallbackListener mIStepTabletCallbackListener;
+
+    public static StepsFragment getInstance(RecipeResponse recipeResponse, IStepTabletCallbackListener iStepTabletCallbackListener) {
         StepsFragment stepsFragment = new StepsFragment();
+
+        mIStepTabletCallbackListener = iStepTabletCallbackListener;
 
         Bundle bundle = new Bundle();
         bundle.putParcelable(Constants.RECIPE_MODEL_INTENT_EXTRA, recipeResponse);
@@ -82,11 +82,13 @@ public class StepsFragment extends Fragment implements StepsFragmentView, IStepp
     public void onAttach(Context context) {
         super.onAttach(context);
         mStepsFragmentPresenter = new StepsFragmentPresenterImpl(this);
+        mIStepTabletCallbackListener = (IStepTabletCallbackListener) getActivity();
     }
 
     @Override
     public void onDetach() {
         mStepsFragmentPresenter.destroyView();
+        mIStepTabletCallbackListener = null;
         super.onDetach();
     }
 
@@ -118,6 +120,10 @@ public class StepsFragment extends Fragment implements StepsFragmentView, IStepp
         }
     }
 
+    /**
+     * +2 for Welcome and Outro steps
+     */
+
     @Override
     public int size() {
         return (mRecipeResponse.getSteps().size() + 2);
@@ -138,6 +144,8 @@ public class StepsFragment extends Fragment implements StepsFragmentView, IStepp
                 } else {
                     mFragmentStepsBinding.vsvSteps.setAnimationEnabled(!mFragmentStepsBinding.vsvSteps.isAnimationEnabled());
                 }
+
+                stepCount -= 1;
             }
         });
 
@@ -150,15 +158,13 @@ public class StepsFragment extends Fragment implements StepsFragmentView, IStepp
                     stepCount += 1;
 
                     if (getActivity() != null) {
-                        if (getActivity().findViewById(R.id.llTwoPaneMode) != null) {
-                            return;
+                        if (getResources().getBoolean(R.bool.isTablet)) {
+                            if (i != 0 && i != size() - 1) {
+                                mIStepTabletCallbackListener.onIngredientsScreenOpened(mRecipeResponse, (i - 1), true);
+                            }
                         } else {
                             if (i != 0 && i != size() - 1) {
-                                Intent stepsIntent = new Intent(getActivity(), IngredientsActivity.class);
-                                stepsIntent.putExtra(Constants.RECIPE_MODEL_INTENT_EXTRA, mRecipeResponse);
-                                stepsIntent.putExtra(Constants.RECIPE_MODEL_STEPS_ID_INTENT_EXTRA, (i - 1));
-
-                                startActivityForResult(stepsIntent, Constants.CHILD_ACTIVITY_REQUEST_CODE);
+                                mIStepTabletCallbackListener.onIngredientsScreenOpened(mRecipeResponse, (i - 1), false);
                             }
                         }
                     }
@@ -175,17 +181,21 @@ public class StepsFragment extends Fragment implements StepsFragmentView, IStepp
                                 @Override
                                 public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                     dialog.dismiss();
+                                    nextButton.setEnabled(false);
+                                    nextButton.setBackgroundTintList(ContextCompat.getColorStateList(getActivity(),
+                                            android.R.color.darker_gray));
                                 }
                             })
                             .show();
-
-                    nextButton.setEnabled(false);
-                    nextButton.setBackgroundTintList(ContextCompat.getColorStateList(getActivity(), android.R.color.darker_gray));
                 }
             }
         });
 
         if (i == 0) {
+            if (getResources().getBoolean(R.bool.isTablet)) {
+                mIStepTabletCallbackListener.onTutorialScreensActivated(true, i);
+            }
+
             prevButton.setVisibility(View.GONE);
         } else {
             prevButton.setVisibility(View.VISIBLE);
@@ -193,6 +203,10 @@ public class StepsFragment extends Fragment implements StepsFragmentView, IStepp
 
 
         if (stepCount == (size() - 1)) {
+            if (getResources().getBoolean(R.bool.isTablet)) {
+                mIStepTabletCallbackListener.onTutorialScreensActivated(true, stepCount);
+            }
+
             prevButton.setVisibility(View.GONE);
             nextButton.setText(getString(R.string.steps_complete));
         }

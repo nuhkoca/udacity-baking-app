@@ -25,18 +25,28 @@
         <activity android:name=".view.recipe.activity.RecipeActivity" />
         <activity
             android:name=".view.steps.activity.StepsActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:launchMode="singleTop"
-            android:parentActivityName=".view.recipe.activity.RecipeActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"/>
+            android:parentActivityName=".view.recipe.activity.RecipeActivity" />
         <activity
             android:name=".view.about.AboutActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:launchMode="singleTop"
-            android:parentActivityName=".view.recipe.activity.RecipeActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"/>
+            android:parentActivityName=".view.recipe.activity.RecipeActivity" />
         <activity
             android:name=".view.ingredients.activity.IngredientsActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".view.steps.activity.StepsActivity" />
+
+        <receiver android:name=".RecipesWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/recipes_widget_info" />
+        </receiver>
     </application>
 
 </manifest>

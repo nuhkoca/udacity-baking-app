@@ -1,0 +1,15 @@
+<resources>
+
+    <!-- CardView Tablet Theme -->
+    <style name="RecipeCardViewAppearance">
+        <item name="android:shape">rectangle</item>
+        <item name="cardCornerRadius">4dp</item>
+        <item name="cardBackgroundColor">@color/colorWhite</item>
+        <item name="cardElevation">@dimen/dp4</item>
+        <item name="android:layout_marginStart">@dimen/dp16</item>
+        <item name="android:layout_marginEnd">@dimen/dp16</item>
+        <item name="android:layout_marginBottom">@dimen/dp16</item>
+        <item name="android:layout_marginTop">@dimen/dp16</item>
+    </style>
+
+</resources>

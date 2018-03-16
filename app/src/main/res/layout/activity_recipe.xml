@@ -8,10 +8,18 @@
     <include android:id="@+id/lRecipeToolbar"
         layout="@layout/toolbar" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+
     <FrameLayout
         android:id="@+id/flRecipesHolder"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:scaleType="centerInside"/>
+
+    </LinearLayout>
 
 </LinearLayout>
 </layout>

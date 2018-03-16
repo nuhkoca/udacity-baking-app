@@ -1,9 +1,11 @@
 package com.nuhkoca.udacitybakingapp.view.splash;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.nuhkoca.udacitybakingapp.R;
 import com.nuhkoca.udacitybakingapp.presenter.splash.SplashActivityPresenter;
 import com.nuhkoca.udacitybakingapp.presenter.splash.SplashActivityPresenterImpl;
 import com.nuhkoca.udacitybakingapp.view.recipe.activity.RecipeActivity;
@@ -15,6 +17,12 @@ public class SplashActivity extends AppCompatActivity implements SplashActivityV
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (getResources().getBoolean(R.bool.isTablet)){
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
 
         mSplashActivityPresenter = new SplashActivityPresenterImpl(this);
         mSplashActivityPresenter.openActivity();

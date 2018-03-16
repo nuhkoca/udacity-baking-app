@@ -1,22 +1,24 @@
 package com.nuhkoca.udacitybakingapp.view.steps.activity;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.view.MenuItem;
 
 import com.nuhkoca.udacitybakingapp.R;
+import com.nuhkoca.udacitybakingapp.TabletTutorialFragment;
+import com.nuhkoca.udacitybakingapp.callback.IStepTabletCallbackListener;
 import com.nuhkoca.udacitybakingapp.databinding.ActivityStepsBinding;
 import com.nuhkoca.udacitybakingapp.helper.Constants;
 import com.nuhkoca.udacitybakingapp.model.RecipeResponse;
 import com.nuhkoca.udacitybakingapp.presenter.steps.activity.StepsActivityPresenter;
 import com.nuhkoca.udacitybakingapp.presenter.steps.activity.StepsActivityPresenterImpl;
+import com.nuhkoca.udacitybakingapp.view.ingredients.activity.IngredientsActivity;
+import com.nuhkoca.udacitybakingapp.view.ingredients.fragment.IngredientsFragment;
 import com.nuhkoca.udacitybakingapp.view.steps.fragment.StepsFragment;
 
-import java.util.List;
-
-public class StepsActivity extends AppCompatActivity implements StepsActivityView {
+public class StepsActivity extends AppCompatActivity implements StepsActivityView, IStepTabletCallbackListener {
 
     private ActivityStepsBinding mActivityStepsBinding;
     private StepsActivityPresenter mStepsActivityPresenter;
@@ -38,7 +40,12 @@ public class StepsActivity extends AppCompatActivity implements StepsActivityVie
     public void onFirstRun() {
         setSupportActionBar(mActivityStepsBinding.lStepsToolbar.toolbar);
         setTitle("");
-        mActivityStepsBinding.lStepsToolbar.tvToolbarHeader.setText(getString(R.string.steps_header));
+
+        if (getResources().getBoolean(R.bool.isTablet)) {
+            mActivityStepsBinding.lStepsToolbar.tvToolbarHeader.setText(getString(R.string.steps_tablet_header));
+        } else {
+            mActivityStepsBinding.lStepsToolbar.tvToolbarHeader.setText(getString(R.string.steps_header));
+        }
 
         ActionBar actionBar = getSupportActionBar();
 
@@ -53,7 +60,7 @@ public class StepsActivity extends AppCompatActivity implements StepsActivityVie
         RecipeResponse recipeResponse = getIntent().getParcelableExtra(Constants.RECIPE_MODEL_INTENT_EXTRA);
 
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.flStepsFragmentHolder, StepsFragment.getInstance(recipeResponse))
+                .add(R.id.flStepsFragmentHolder, StepsFragment.getInstance(recipeResponse, this))
                 .commit();
     }
 
@@ -80,5 +87,29 @@ public class StepsActivity extends AppCompatActivity implements StepsActivityVie
         mStepsActivityPresenter = new StepsActivityPresenterImpl(this);
 
         super.onResume();
+    }
+
+    @Override
+    public void onIngredientsScreenOpened(RecipeResponse recipeResponse, int whichItem, boolean isTablet) {
+        if (isTablet) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.flStepIngredientsHolder, IngredientsFragment.getInstance(recipeResponse, whichItem))
+                    .commit();
+        } else {
+            Intent stepsIntent = new Intent(StepsActivity.this, IngredientsActivity.class);
+            stepsIntent.putExtra(Constants.RECIPE_MODEL_INTENT_EXTRA, recipeResponse);
+            stepsIntent.putExtra(Constants.RECIPE_MODEL_STEPS_ID_INTENT_EXTRA, whichItem);
+
+            startActivityForResult(stepsIntent, Constants.CHILD_ACTIVITY_REQUEST_CODE);
+        }
+    }
+
+    @Override
+    public void onTutorialScreensActivated(boolean isTablet, int order) {
+        if (isTablet) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.flStepIngredientsHolder, TabletTutorialFragment.getInstance(order))
+                    .commit();
+        }
     }
 }

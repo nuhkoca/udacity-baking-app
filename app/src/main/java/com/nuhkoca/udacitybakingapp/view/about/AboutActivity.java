@@ -93,7 +93,7 @@ public class AboutActivity extends AppCompatActivity implements AboutActivityVie
         View aboutPage = new AboutPage(this)
                 .isRTL(false)
                 .setDescription(getString(R.string.about_description))
-                .setImage(R.mipmap.ic_launcher_round)
+                .setImage(R.drawable.ic_launcher_round)
                 .addItem(new Element().setTitle(String.valueOf(String.format(getString(R.string.version), BuildConfig.VERSION_NAME)))
                 .setOnClickListener(new View.OnClickListener() {
                     @Override

@@ -2,6 +2,7 @@ package com.nuhkoca.udacitybakingapp.view.recipe.fragment;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -10,19 +11,22 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.nuhkoca.udacitybakingapp.R;
+import com.nuhkoca.udacitybakingapp.callback.IErrorCallbackListener;
 import com.nuhkoca.udacitybakingapp.callback.IRecipeItemClickListener;
 import com.nuhkoca.udacitybakingapp.databinding.FragmentRecipeBinding;
 import com.nuhkoca.udacitybakingapp.helper.Constants;
 import com.nuhkoca.udacitybakingapp.model.RecipeResponse;
 import com.nuhkoca.udacitybakingapp.presenter.recipe.fragment.RecipeFragmentPresenter;
 import com.nuhkoca.udacitybakingapp.presenter.recipe.fragment.RecipeFragmentPresenterImpl;
-import com.nuhkoca.udacitybakingapp.util.SnackbarPopper;
+import com.nuhkoca.udacitybakingapp.util.ColumnCalculator;
 import com.nuhkoca.udacitybakingapp.view.recipe.adapter.RecipeAdapter;
 import com.nuhkoca.udacitybakingapp.view.steps.activity.StepsActivity;
 
@@ -41,7 +45,10 @@ public class RecipeFragment extends Fragment implements RecipeFragmentView, IRec
     private static List<RecipeResponse> mRecipeResponses;
     private static int mProgressRecipeVisibility;
 
-    public static RecipeFragment getInstance() {
+    private static IErrorCallbackListener mIErrorCallbackListener;
+
+    public static RecipeFragment getInstance(IErrorCallbackListener iErrorCallbackListener) {
+        mIErrorCallbackListener = iErrorCallbackListener;
 
         return new RecipeFragment();
     }
@@ -58,19 +65,21 @@ public class RecipeFragment extends Fragment implements RecipeFragmentView, IRec
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         mFragmentPresenter = new RecipeFragmentPresenterImpl(this);
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        mFragmentRecipeBinding.rvRecipes.setLayoutManager(linearLayoutManager);
+        RecyclerView.LayoutManager layoutManager;
+
+        if (!getResources().getBoolean(R.bool.isTablet)) {
+            layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        } else {
+            layoutManager = new GridLayoutManager(getActivity(), ColumnCalculator.getOptimalNumberOfColumn(getActivity()));
+        }
+
+        mFragmentRecipeBinding.rvRecipes.setLayoutManager(layoutManager);
 
         mFragmentRecipeBinding.rvRecipes.setNestedScrollingEnabled(false);
         mFragmentRecipeBinding.rvRecipes.setHasFixedSize(true);
 
         if (savedInstanceState != null) {
-            RecipeAdapter recipeAdapter = new RecipeAdapter(mRecipeResponses, this);
-            mFragmentRecipeBinding.rvRecipes.setAdapter(recipeAdapter);
-            recipeAdapter.swapData();
-
-            mFragmentRecipeBinding.pbRecipes.setVisibility(mProgressRecipeVisibility == 0 ? View.VISIBLE : View.GONE);
-
+            mFragmentPresenter.behaveAfterRotation();
             return;
         }
 
@@ -78,7 +87,7 @@ public class RecipeFragment extends Fragment implements RecipeFragmentView, IRec
     }
 
     @Override
-    public void onRecipesFetchingSuccess(List<RecipeResponse> recipeResponses) {
+    public void onRecipesLoaded(List<RecipeResponse> recipeResponses) {
         RecipeAdapter recipeAdapter = new RecipeAdapter(recipeResponses, this);
         mFragmentRecipeBinding.rvRecipes.setAdapter(recipeAdapter);
         recipeAdapter.swapData();
@@ -87,8 +96,17 @@ public class RecipeFragment extends Fragment implements RecipeFragmentView, IRec
     }
 
     @Override
-    public void onRecipesFetchingError(String message) {
-        SnackbarPopper.pop(mFragmentRecipeBinding.flRecipes, message);
+    public void onRecipesLoadingFailed(String message) {
+        mIErrorCallbackListener.onErrorScreenShown(true);
+    }
+
+    @Override
+    public void onScreenRotated() {
+        RecipeAdapter recipeAdapter = new RecipeAdapter(mRecipeResponses, this);
+        mFragmentRecipeBinding.rvRecipes.setAdapter(recipeAdapter);
+        recipeAdapter.swapData();
+
+        mFragmentRecipeBinding.pbRecipes.setVisibility(mProgressRecipeVisibility == 0 ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -126,11 +144,13 @@ public class RecipeFragment extends Fragment implements RecipeFragmentView, IRec
     public void onAttach(Context context) {
         super.onAttach(context);
         mFragmentPresenter = new RecipeFragmentPresenterImpl(this);
+        mIErrorCallbackListener = (IErrorCallbackListener) getActivity();
     }
 
     @Override
     public void onDetach() {
         mFragmentPresenter.destroyView();
+        mIErrorCallbackListener = null;
         super.onDetach();
     }
 

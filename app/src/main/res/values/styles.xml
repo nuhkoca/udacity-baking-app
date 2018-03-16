@@ -33,7 +33,7 @@
     <!-- CardView Theme -->
     <style name="RecipeCardViewAppearance">
         <item name="cardBackgroundColor">@color/colorPrimaryDark</item>
-       <item name="android:shape">rectangle</item>
+        <item name="android:shape">rectangle</item>
         <item name="contentPadding">0.5dp</item>
     </style>
 
@@ -141,6 +141,16 @@
         <item name="android:textSize">@dimen/sp14</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textStyle">normal</item>
+    </style>
+
+
+    <!-- Error Button Theme -->
+    <style name="ErrorViewAppearance" />
+    <style name="ErrorViewAppearance.Button">
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:background">@drawable/button_ripple_effect</item>
     </style>
 
 </resources>

@@ -11,20 +11,26 @@
     <!-- Error Messages -->
     <string name="no_recipe_found">There is no recipe found at the moment.</string>
     <string name="no_connection_found">It seems you are offline. Please check your connection.</string>
+    <string name="no_connection_title">No Connection.</string>
+    <string name="no_connection_content">Error retrieving information from server</string>
+    <string name="no_connection_retry">Retry</string>
 
     <!-- Info Messages -->
     <string name="twice_press_to_exit">Press back once again to exit.</string>
     <string name="congrats_for_ingredient">Congratulations, you have done for %1$s!</string>
     <string name="you_are_up_to_date">You are up-to-date!</string>
+    <string name="congratulations_text">You\'re all caught up, boss!</string>
+    <string name="welcome_text">It\'s good to see you around, chief!</string>
 
     <!-- Extra Recipe Step Text -->
     <string name="first_step_text">Welcome!</string>
     <string name="first_step_summary_text">You\'ll be learning how to prepare a %1$s</string>
     <string name="last_step_text">Outro</string>
-    <string name="last_step_summary_text">Congratulations, you have done for %1$s</string>
+    <string name="last_step_summary_text">Congratulations, you have done with %1$s</string>
 
     <!-- Toolbar Headers -->
     <string name="steps_header">Steps</string>
+    <string name="steps_tablet_header">Steps &amp; Ingredients</string>
     <string name="ingredients_header">%1$s Recipe</string>
 
     <!-- Button Texts -->
@@ -91,5 +97,7 @@
         <item name="fastadapter">fastadapter</item>
         <item name="Android-Iconics">Android-Iconics</item>
     </string-array>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 
 </resources>

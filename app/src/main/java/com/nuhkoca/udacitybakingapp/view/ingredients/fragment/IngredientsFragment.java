@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +51,7 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
     private IngredientsFragmentPresenter mIngredientsFragmentPresenter;
     private RecipeResponse mRecipeResponse;
     private int mWhichItem;
+    private static long mVideoPosition;
 
     private SimpleExoPlayer mExoPlayer;
     private DataSource.Factory mMediaDataSourceFactory;
@@ -95,32 +97,33 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
             mWhichItem = getArguments().getInt(Constants.RECIPE_MODEL_STEPS_ID_INTENT_EXTRA);
         }
 
+        int resId = 0;
+
         switch (mRecipeResponse.getName()) {
             case Constants.NUTELLA_PIE_CASE:
-                mFragmentIngredientsBinding.sepvIngredients.setDefaultArtwork(BitmapFactory.decodeResource(
-                        getResources(), R.drawable.nutella_pie));
+                resId = R.drawable.nutella_pie;
                 break;
 
             case Constants.BROWNIES_CASE:
-                mFragmentIngredientsBinding.sepvIngredients.setDefaultArtwork(BitmapFactory.decodeResource(
-                        getResources(), R.drawable.brownies));
+                resId = R.drawable.brownies;
                 break;
 
             case Constants.YELLOW_CAKE_CASE:
-                mFragmentIngredientsBinding.sepvIngredients.setDefaultArtwork(BitmapFactory.decodeResource(
-                        getResources(), R.drawable.yellow_cake));
+                resId = R.drawable.yellow_cake;
                 break;
 
             case Constants.CHEESECAKE_CASE:
-                mFragmentIngredientsBinding.sepvIngredients.setDefaultArtwork(BitmapFactory.decodeResource(
-                        getResources(), R.drawable.cheesecake));
+                resId = R.drawable.cheesecake;
                 break;
 
             default:
                 break;
         }
 
-        mShouldAutoPlay = false;
+        mFragmentIngredientsBinding.sepvIngredients.setDefaultArtwork(BitmapFactory.decodeResource(
+                getResources(), resId));
+
+        mShouldAutoPlay = true;
         mMediaDataSourceFactory = buildDataSourceFactory(true);
         mFragmentIngredientsBinding.sepvIngredients.requestFocus();
 
@@ -174,11 +177,13 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
 
             mExoPlayer.setPlayWhenReady(mShouldAutoPlay);
 
-            if (!mRecipeResponse.getSteps().get(mWhichItem).getVideoURL().equals("")) {
+            if (!TextUtils.isEmpty(mRecipeResponse.getSteps().get(mWhichItem).getVideoURL())) {
                 mExoPlayer.prepare(buildMediaSource(Uri.parse(mRecipeResponse.getSteps().get(mWhichItem).getVideoURL())));
             } else {
                 mExoPlayer.prepare(buildMediaSource(Uri.parse(mRecipeResponse.getSteps().get(mWhichItem).getThumbnailURL())));
             }
+
+            mExoPlayer.seekTo(mVideoPosition);
         }
     }
 
@@ -212,9 +217,10 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
             mExoPlayer.stop();
             mExoPlayer.release();
             mExoPlayer.release();
+            mShouldAutoPlay = mExoPlayer.getPlayWhenReady();
+            mVideoPosition = mExoPlayer.getCurrentPosition();
             mExoPlayer = null;
             mTrackSelector = null;
-            mShouldAutoPlay = false;
         }
     }
 
@@ -255,5 +261,21 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
         mIngredientsFragmentPresenter.destroyView();
 
         super.onDetach();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putLong(Constants.EXO_PLAYER_VIDEO_POSITION, mVideoPosition);
+
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            mVideoPosition = savedInstanceState.getLong(Constants.EXO_PLAYER_VIDEO_POSITION);
+        }
     }
 }

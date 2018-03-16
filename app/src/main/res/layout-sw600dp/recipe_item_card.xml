@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    
+    <data>
+        <variable
+            name="recipe"
+            type="com.nuhkoca.udacitybakingapp.model.RecipeResponse" />
+        <variable
+            name="recipeListener"
+            type="com.nuhkoca.udacitybakingapp.callback.IRecipeItemClickListener" />
+        <variable
+            name="formattedServings"
+            type="String" />
+    </data>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/RecipeCardViewAppearance"
+        android:onClick="@{() -> recipeListener.onRecipeItemClick(recipe)}">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="300dp">
+
+            <RelativeLayout
+                android:id="@+id/rlRecipe"
+                android:layout_width="match_parent"
+                android:layout_height="300dp">
+
+                <ProgressBar
+                    android:id="@+id/pbRecipe"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_centerInParent="true"
+                    style="@style/RecipeProgressBarAppearance"/>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:layout_centerInParent="true"
+                    android:src="@{recipe.image}"
+                    app:pbRecipe="@{pbRecipe}"
+                    app:rlRecipe="@{rlRecipe}"
+                    app:recipeName="@{recipe.name}"
+                    android:contentDescription="@string/imageview_place_holder"
+                    style="@style/RecipeImageViewAppearance"/>
+
+            </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tvRecipeName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@{recipe.name}"
+        android:onClick="@{() -> recipeListener.onRecipeItemClick(recipe)}"
+        style="@style/RecipeCardTextAppearance.ItemRow" />
+
+        <View
+            android:id="@+id/vRecipeLine"
+            android:layout_width="50dp"
+            android:layout_height="3dp"
+            android:layout_marginTop="165dp"
+            android:layout_centerHorizontal="true"
+            android:visibility="invisible"
+            android:background="@color/colorPrimaryDark"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{formattedServings}"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            style="@style/RecipeCardTextAppearance.ServingsRow"/>
+
+    </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+</layout>
