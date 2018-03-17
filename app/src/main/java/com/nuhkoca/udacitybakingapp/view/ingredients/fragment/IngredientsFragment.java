@@ -65,6 +65,8 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
     private RecipeResponse mRecipeResponse;
     private int mWhichItem;
     private static long mVideoPosition;
+    private static boolean mShouldAutoPlay;
+
     private static String mRecipeName;
 
     private SimpleExoPlayer mExoPlayer;
@@ -73,7 +75,6 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
 
     private static final DefaultBandwidthMeter BANDWIDTH_METER = new DefaultBandwidthMeter();
 
-    private boolean mShouldAutoPlay;
 
     public static IngredientsFragment getInstance(RecipeResponse recipeResponse, int whichItem) {
         IngredientsFragment ingredientsFragment = new IngredientsFragment();
@@ -101,6 +102,10 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
                              Bundle savedInstanceState) {
 
         mFragmentIngredientsBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_ingredients, container, false);
+
+        if (savedInstanceState == null){
+            mShouldAutoPlay = true;
+        }
 
         return mFragmentIngredientsBinding.getRoot();
     }
@@ -168,7 +173,6 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
         mFragmentIngredientsBinding.sepvIngredients.setDefaultArtwork(BitmapFactory.decodeResource(
                 getResources(), resId));
 
-        mShouldAutoPlay = true;
         mMediaDataSourceFactory = buildDataSourceFactory(true);
         mFragmentIngredientsBinding.sepvIngredients.requestFocus();
 
@@ -397,6 +401,7 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putLong(Constants.EXO_PLAYER_VIDEO_POSITION, mVideoPosition);
+        outState.putBoolean(Constants.EXO_PLAYER_PLAYING_STATE, mShouldAutoPlay);
 
         super.onSaveInstanceState(outState);
     }
@@ -407,6 +412,7 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
 
         if (savedInstanceState != null) {
             mVideoPosition = savedInstanceState.getLong(Constants.EXO_PLAYER_VIDEO_POSITION);
+            mShouldAutoPlay = savedInstanceState.getBoolean(Constants.EXO_PLAYER_PLAYING_STATE);
         }
     }
 }

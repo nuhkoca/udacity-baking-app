@@ -93,6 +93,7 @@
         <item name="android-about-page">android-about-page</item>
         <item name="exo_player">ExoPlayer</item>
         <item name="material_stepper">MaterialStepperView</item>
+        <item name="schematic">schematic</item>
     </string-array>
 
     <!-- Libraries Excluded -->
