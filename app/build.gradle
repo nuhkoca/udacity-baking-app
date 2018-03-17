@@ -36,6 +36,7 @@ dependencies {
     implementation "com.android.support:design:$rootProject.ext.supportLibraryVersion"
     implementation "com.android.support:recyclerview-v7:$rootProject.ext.supportLibraryVersion"
     implementation "com.android.support:cardview-v7:$rootProject.ext.supportLibraryVersion"
+    implementation "com.android.support.test.espresso:espresso-idling-resource:$rootProject.ext.espressoVersion"
 
     implementation "com.google.android.exoplayer:exoplayer:$rootProject.ext.exoPlayerVersion"
     implementation "jp.wasabeef:blurry:$rootProject.ext.blurryVersion"
@@ -69,5 +70,7 @@ dependencies {
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$rootProject.ext.espressoVersion"
     androidTestImplementation "com.android.support.test:rules:$rootProject.ext.testVersion"
     androidTestImplementation "com.android.support.test:runner:$rootProject.ext.testVersion"
+    androidTestImplementation "com.android.support.test.espresso:espresso-contrib:$rootProject.ext.espressoVersion"
+
     testImplementation "junit:junit:$rootProject.ext.JUnitVersion"
 }

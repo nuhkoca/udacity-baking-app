@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.IdlingResource;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,6 +28,7 @@ import com.nuhkoca.udacitybakingapp.helper.Constants;
 import com.nuhkoca.udacitybakingapp.model.RecipeResponse;
 import com.nuhkoca.udacitybakingapp.presenter.recipe.fragment.RecipeFragmentPresenter;
 import com.nuhkoca.udacitybakingapp.presenter.recipe.fragment.RecipeFragmentPresenterImpl;
+import com.nuhkoca.udacitybakingapp.test.SimpleIdlingResource;
 import com.nuhkoca.udacitybakingapp.util.ColumnCalculator;
 import com.nuhkoca.udacitybakingapp.view.recipe.adapter.RecipeAdapter;
 import com.nuhkoca.udacitybakingapp.view.steps.activity.StepsActivity;
@@ -47,10 +50,33 @@ public class RecipeFragment extends Fragment implements RecipeFragmentView, IRec
 
     private static IErrorCallbackListener mIErrorCallbackListener;
 
+    @Nullable
+    private SimpleIdlingResource mIdlingResource;
+
+    @VisibleForTesting
+    @NonNull
+    public IdlingResource getIdlingResource() {
+        if (mIdlingResource == null) {
+            mIdlingResource = new SimpleIdlingResource();
+        }
+        return mIdlingResource;
+    }
+
     public static RecipeFragment getInstance(IErrorCallbackListener iErrorCallbackListener) {
         mIErrorCallbackListener = iErrorCallbackListener;
 
         return new RecipeFragment();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        getIdlingResource();
+
+        if (mIdlingResource != null) {
+            mIdlingResource.setIdleState(false);
+        }
     }
 
     @Override
@@ -93,11 +119,19 @@ public class RecipeFragment extends Fragment implements RecipeFragmentView, IRec
         recipeAdapter.swapData();
 
         mRecipeResponses = recipeResponses;
+
+        if (mIdlingResource != null) {
+            mIdlingResource.setIdleState(true);
+        }
     }
 
     @Override
     public void onRecipesLoadingFailed(String message) {
         mIErrorCallbackListener.onErrorScreenShown(true);
+
+        if (mIdlingResource != null) {
+            mIdlingResource.setIdleState(false);
+        }
     }
 
     @Override
