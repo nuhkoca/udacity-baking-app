@@ -30,6 +30,11 @@ public class IngredientsFragmentPresenterImpl implements IngredientsFragmentPres
     }
 
     @Override
+    public void addItemsInDatabase() {
+        mIngredientsFragmentView.onItemsAddedInDatabase();
+    }
+
+    @Override
     public void destroyView() {
         if (mIngredientsFragmentView != null) {
             mIngredientsFragmentView = null;

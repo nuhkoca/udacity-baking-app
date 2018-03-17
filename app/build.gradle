@@ -53,6 +53,9 @@ dependencies {
         exclude group: 'glide-parent'
     }
 
+    annotationProcessor "net.simonvt.schematic:schematic-compiler:$rootProject.ext.shematicVersion"
+    implementation "net.simonvt.schematic:schematic:$rootProject.ext.shematicVersion"
+
     implementation "com.squareup.retrofit2:adapter-rxjava:$rootProject.ext.rxJavaLibraryVersion"
     implementation "com.squareup.retrofit2:retrofit:$rootProject.ext.rxJavaLibraryVersion"
     implementation "com.squareup.retrofit2:converter-gson:$rootProject.ext.rxJavaLibraryVersion"

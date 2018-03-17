@@ -38,7 +38,8 @@ public class StepsFragment extends Fragment implements StepsFragmentView, IStepp
     private FragmentStepsBinding mFragmentStepsBinding;
     private StepsFragmentPresenter mStepsFragmentPresenter;
     private RecipeResponse mRecipeResponse;
-    private int stepCount = 0;
+    private int mStepCount;
+    private boolean mIsClicked;
 
     private static IStepTabletCallbackListener mIStepTabletCallbackListener;
 
@@ -65,6 +66,9 @@ public class StepsFragment extends Fragment implements StepsFragmentView, IStepp
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        mStepCount = 0;
+        mIsClicked = false;
+
         mStepsFragmentPresenter = new StepsFragmentPresenterImpl(this);
         mStepsFragmentPresenter.loadSteps();
     }
@@ -145,7 +149,7 @@ public class StepsFragment extends Fragment implements StepsFragmentView, IStepp
                     mFragmentStepsBinding.vsvSteps.setAnimationEnabled(!mFragmentStepsBinding.vsvSteps.isAnimationEnabled());
                 }
 
-                stepCount -= 1;
+                mStepCount -= 1;
             }
         });
 
@@ -155,7 +159,7 @@ public class StepsFragment extends Fragment implements StepsFragmentView, IStepp
             public void onClick(View v) {
                 if (mFragmentStepsBinding.vsvSteps.canNext()) {
                     mFragmentStepsBinding.vsvSteps.nextStep();
-                    stepCount += 1;
+                    mStepCount += 1;
 
                     if (getActivity() != null) {
                         if (getResources().getBoolean(R.bool.isTablet)) {
@@ -184,6 +188,8 @@ public class StepsFragment extends Fragment implements StepsFragmentView, IStepp
                                     nextButton.setEnabled(false);
                                     nextButton.setBackgroundTintList(ContextCompat.getColorStateList(getActivity(),
                                             android.R.color.darker_gray));
+
+                                    mIsClicked = true;
                                 }
                             })
                             .show();
@@ -191,24 +197,36 @@ public class StepsFragment extends Fragment implements StepsFragmentView, IStepp
             }
         });
 
-        if (i == 0) {
+        if (mStepCount == 0) {
             if (getResources().getBoolean(R.bool.isTablet)) {
                 mIStepTabletCallbackListener.onTutorialScreensActivated(true, i);
             }
 
             prevButton.setVisibility(View.GONE);
         } else {
-            prevButton.setVisibility(View.VISIBLE);
+            if (mStepCount == 1) {
+                prevButton.setVisibility(View.GONE);
+            } else {
+                prevButton.setVisibility(View.VISIBLE);
+            }
         }
 
-
-        if (stepCount == (size() - 1)) {
+        if (mStepCount == (size() - 1)) {
             if (getResources().getBoolean(R.bool.isTablet)) {
-                mIStepTabletCallbackListener.onTutorialScreensActivated(true, stepCount);
+                mIStepTabletCallbackListener.onTutorialScreensActivated(true, mStepCount);
             }
 
             prevButton.setVisibility(View.GONE);
             nextButton.setText(getString(R.string.steps_complete));
+
+            if (mIsClicked) {
+                nextButton.setEnabled(false);
+
+                if (getActivity() != null) {
+                    nextButton.setBackgroundTintList(ContextCompat.getColorStateList(getActivity(),
+                            android.R.color.darker_gray));
+                }
+            }
         }
 
         return inflateView;

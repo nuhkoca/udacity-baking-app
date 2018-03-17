@@ -1,4 +1,4 @@
-package com.nuhkoca.udacitybakingapp;
+package com.nuhkoca.udacitybakingapp.view.other;
 
 
 import android.databinding.DataBindingUtil;
@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.nuhkoca.udacitybakingapp.R;
 import com.nuhkoca.udacitybakingapp.databinding.FragmentTabletTutorialBinding;
 import com.nuhkoca.udacitybakingapp.helper.Constants;
 import com.nuhkoca.udacitybakingapp.module.GlideApp;

@@ -1,4 +1,4 @@
-package com.nuhkoca.udacitybakingapp;
+package com.nuhkoca.udacitybakingapp.view.other;
 
 
 import android.content.Context;
@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.nuhkoca.udacitybakingapp.R;
 import com.nuhkoca.udacitybakingapp.callback.IErrorCallbackListener;
 import com.nuhkoca.udacitybakingapp.databinding.FragmentErrorBinding;
 

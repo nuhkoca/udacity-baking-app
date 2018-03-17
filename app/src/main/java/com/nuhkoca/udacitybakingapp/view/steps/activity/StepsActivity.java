@@ -7,7 +7,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 
 import com.nuhkoca.udacitybakingapp.R;
-import com.nuhkoca.udacitybakingapp.TabletTutorialFragment;
+import com.nuhkoca.udacitybakingapp.view.other.TabletTutorialFragment;
 import com.nuhkoca.udacitybakingapp.callback.IStepTabletCallbackListener;
 import com.nuhkoca.udacitybakingapp.databinding.ActivityStepsBinding;
 import com.nuhkoca.udacitybakingapp.helper.Constants;

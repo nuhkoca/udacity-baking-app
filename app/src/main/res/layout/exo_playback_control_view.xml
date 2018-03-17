@@ -27,6 +27,10 @@
             style="@style/ExoMediaButton.Pause"
             android:contentDescription="@string/imageview_place_holder" />
 
+        <ImageButton android:id="@id/exo_repeat_toggle"
+            style="@style/ExoMediaButton"
+            android:contentDescription="@string/imageview_place_holder" />
+
     </LinearLayout>
 
     <LinearLayout

@@ -1,9 +1,9 @@
 package com.nuhkoca.udacitybakingapp.view.ingredients.activity;
 
 import android.databinding.DataBindingUtil;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 
 import com.nuhkoca.udacitybakingapp.R;
 import com.nuhkoca.udacitybakingapp.databinding.ActivityIngredientsBinding;

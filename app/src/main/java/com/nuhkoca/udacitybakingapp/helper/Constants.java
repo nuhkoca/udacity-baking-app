@@ -24,8 +24,9 @@ public class Constants {
     public static final String CHEESECAKE_CASE= "Cheesecake";
     public static final int TABLET_DIVIDER = 1000;
     public static final String EXO_PLAYER_VIDEO_POSITION = "exo-player-video-position";
-    public static int SCREEN_WIDTH_PIXEL_CONDITION = 1440;
-    public static String FRAGMENT_ORDER = "fragment - order";
+    public static final int SCREEN_WIDTH_PIXEL_CONDITION = 1440;
+    public static final String FRAGMENT_ORDER = "fragment-order";
+    public static final String DATABASE_NAME = "mybaking.db";
 
     public Constants() {
         throw new AssertionError();

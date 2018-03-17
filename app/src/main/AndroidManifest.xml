@@ -38,15 +38,26 @@
             android:launchMode="singleTop"
             android:parentActivityName=".view.steps.activity.StepsActivity" />
 
-        <receiver android:name=".RecipesWidget">
+        <provider
+            android:name=".provider.generated.BakingProvider"
+            android:authorities="com.nuhkoca.udacitybakingapp.provider.provider"
+            android:exported="true"
+            android:syncable="true"/>
+
+        <receiver android:name=".widget.BakingWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/recipes_widget_info" />
+                android:resource="@xml/baking_widget_info" />
         </receiver>
+
+        <service
+            android:name=".widget.GridWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
     </application>
 
 </manifest>

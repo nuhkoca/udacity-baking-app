@@ -1,9 +1,12 @@
 package com.nuhkoca.udacitybakingapp.view.ingredients.fragment;
 
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,8 +14,12 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
@@ -38,9 +45,15 @@ import com.nuhkoca.udacitybakingapp.helper.Constants;
 import com.nuhkoca.udacitybakingapp.model.RecipeResponse;
 import com.nuhkoca.udacitybakingapp.presenter.ingredients.fragment.IngredientsFragmentPresenter;
 import com.nuhkoca.udacitybakingapp.presenter.ingredients.fragment.IngredientsFragmentPresenterImpl;
+import com.nuhkoca.udacitybakingapp.provider.BakingContract;
+import com.nuhkoca.udacitybakingapp.provider.BakingProvider;
 import com.nuhkoca.udacitybakingapp.view.ingredients.adapter.IngredientsAdapter;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import timber.log.Timber;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -52,6 +65,7 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
     private RecipeResponse mRecipeResponse;
     private int mWhichItem;
     private static long mVideoPosition;
+    private static String mRecipeName;
 
     private SimpleExoPlayer mExoPlayer;
     private DataSource.Factory mMediaDataSourceFactory;
@@ -73,6 +87,14 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
         return ingredientsFragment;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (!getResources().getBoolean(R.bool.isTablet)) {
+            setHasOptionsMenu(true);
+        }
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -91,9 +113,32 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.ingredient_menu, menu);
+
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemThatWasClicked = item.getItemId();
+
+        switch (itemThatWasClicked) {
+            case R.id.add_widget:
+                mIngredientsFragmentPresenter.addItemsInDatabase();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onIngredientsLoaded() {
         if (getArguments() != null) {
             mRecipeResponse = getArguments().getParcelable(Constants.RECIPE_MODEL_INTENT_EXTRA);
+            if (mRecipeResponse != null) {
+                mRecipeName = mRecipeResponse.getName();
+            }
             mWhichItem = getArguments().getInt(Constants.RECIPE_MODEL_STEPS_ID_INTENT_EXTRA);
         }
 
@@ -221,6 +266,92 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
             mVideoPosition = mExoPlayer.getCurrentPosition();
             mExoPlayer = null;
             mTrackSelector = null;
+        }
+    }
+
+    @Override
+    public void onItemsAddedInDatabase() {
+        List<String> quantities = new ArrayList<>();
+        List<String> ingredients = new ArrayList<>();
+
+        for (int i = 0; i < mRecipeResponse.getIngredients().size(); i++) {
+            quantities.add(String.valueOf(mRecipeResponse.getIngredients().get(i).getQuantity()) + " "
+                    + mRecipeResponse.getIngredients().get(i).getMeasure());
+
+            ingredients.add(mRecipeResponse.getIngredients().get(i).getIngredient());
+        }
+
+        String quantityAndMeasure = TextUtils.join(", ", quantities);
+        String ingredient = TextUtils.join(", ", ingredients);
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(BakingContract.COLUMN_FOOD_NAME, mRecipeResponse.getName());
+        contentValues.put(BakingContract.COLUMN_QUANTITY_MEASURE, quantityAndMeasure);
+        contentValues.put(BakingContract.COLUMN_INGREDIENTS, ingredient);
+
+
+        new MyCustomDatabaseSplicer(contentValues).execute();
+        new MyCustomDatabaseSplicer1().execute();
+    }
+
+    private static class MyCustomDatabaseSplicer extends AsyncTask<Void, Void, Uri> {
+
+        private ContentValues contentValues;
+
+        MyCustomDatabaseSplicer(ContentValues contentValues) {
+            this.contentValues = contentValues;
+        }
+
+        @Override
+        protected Uri doInBackground(Void... voids) {
+            try {
+                return App.getInstance().getContentResolver().insert(BakingProvider.BakingIngredients.CONTENT_URI, contentValues);
+            } catch (Exception e) {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Uri uri) {
+            if (uri != null) {
+                Toast.makeText(App.getInstance().getApplicationContext(),
+                        String.format(App.getInstance().getString(R.string.added_to_widget), mRecipeName), Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(App.getInstance().getApplicationContext(),
+                        App.getInstance().getString(R.string.error_while_adding_to_widget), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private static class MyCustomDatabaseSplicer1 extends AsyncTask<Void, Void, Cursor> {
+
+        @Override
+        protected Cursor doInBackground(Void... voids) {
+            try {
+                return App.getInstance().getContentResolver().query(
+                        BakingProvider.BakingIngredients.CONTENT_URI, null, null, null, null);
+            } catch (Exception e) {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Cursor cursor) {
+            cursor.moveToFirst();
+
+            int foodId = cursor.getColumnIndex(BakingContract.COLUMN_FOOD_NAME);
+            int quantityId = cursor.getColumnIndex(BakingContract.COLUMN_QUANTITY_MEASURE);
+            int ingId = cursor.getColumnIndex(BakingContract.COLUMN_INGREDIENTS);
+
+            while (!cursor.isAfterLast()) {
+                String food = cursor.getString(foodId);
+                String quantity = cursor.getString(quantityId);
+                String ing = cursor.getString(ingId);
+
+                Timber.d(food + " " + quantity + " " + ing);
+                cursor.moveToNext();
+
+            }
         }
     }
 

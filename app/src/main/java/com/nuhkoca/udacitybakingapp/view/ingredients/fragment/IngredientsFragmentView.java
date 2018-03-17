@@ -10,4 +10,6 @@ public interface IngredientsFragmentView {
     void onPlayerInitialized();
 
     void onPlayerReleased();
+
+    void onItemsAddedInDatabase();
 }

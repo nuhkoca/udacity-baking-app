@@ -11,5 +11,7 @@ public interface IngredientsFragmentPresenter {
 
     void releasePlayer();
 
+    void addItemsInDatabase();
+
     void destroyView();
 }

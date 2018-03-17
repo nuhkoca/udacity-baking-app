@@ -10,7 +10,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.nuhkoca.udacitybakingapp.ErrorFragment;
 import com.nuhkoca.udacitybakingapp.R;
 import com.nuhkoca.udacitybakingapp.callback.IErrorCallbackListener;
 import com.nuhkoca.udacitybakingapp.databinding.ActivityRecipeBinding;
@@ -18,6 +17,7 @@ import com.nuhkoca.udacitybakingapp.helper.Constants;
 import com.nuhkoca.udacitybakingapp.presenter.recipe.activity.RecipeActivityPresenter;
 import com.nuhkoca.udacitybakingapp.presenter.recipe.activity.RecipeActivityPresenterImpl;
 import com.nuhkoca.udacitybakingapp.view.about.AboutActivity;
+import com.nuhkoca.udacitybakingapp.view.other.ErrorFragment;
 import com.nuhkoca.udacitybakingapp.view.recipe.fragment.RecipeFragment;
 
 public class RecipeActivity extends AppCompatActivity implements RecipeActivityView, IErrorCallbackListener {
