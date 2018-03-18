@@ -8,7 +8,6 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorAccent"
@@ -27,27 +26,18 @@
             tools:text="Food Name" />
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
     <TextView
-        android:id="@+id/tvWidgetIngName"
+        android:id="@+id/tvWidgetRecipeDetails"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_margin="@dimen/dp8"
+        android:textSize="@dimen/sp16"
         android:textColor="@color/colorBlack"
         tools:text="Ingredient Name" />
-
-    <TextView
-        android:id="@+id/tvWidgetIngQuantity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:textColor="@color/colorBlack"
-        tools:text="Ingredient quantity" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_marginStart="@dimen/dp8"
-        android:layout_marginEnd="@dimen/dp8"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray" />
+    </LinearLayout>
 
 </LinearLayout>

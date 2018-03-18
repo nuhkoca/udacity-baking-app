@@ -35,6 +35,11 @@ public class IngredientsFragmentPresenterImpl implements IngredientsFragmentPres
     }
 
     @Override
+    public void removeItemsFromDatabase() {
+        mIngredientsFragmentView.onItemsRemovedFromDatabase();
+    }
+
+    @Override
     public void destroyView() {
         if (mIngredientsFragmentView != null) {
             mIngredientsFragmentView = null;

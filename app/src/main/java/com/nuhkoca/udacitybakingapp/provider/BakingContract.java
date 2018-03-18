@@ -24,9 +24,5 @@ public class BakingContract {
 
     @DataType(DataType.Type.TEXT)
     @NotNull
-    public static final String COLUMN_QUANTITY_MEASURE = "quantityMeasure";
-
-    @DataType(DataType.Type.TEXT)
-    @NotNull
-    public static final String COLUMN_INGREDIENTS = "ingredients";
+    public static final String COLUMN_QUANTITY_MEASURE_INGREDIENTS = "quantityMeasureIngredients";
 }

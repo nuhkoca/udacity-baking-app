@@ -22,7 +22,9 @@
     <string name="congratulations_text">You\'re all caught up, boss!</string>
     <string name="welcome_text">It\'s good to see you around, chief!</string>
     <string name="added_to_widget">%1$s was successfully added to widget.</string>
+    <string name="remove_from_widget">%1$s was successfully remove from widget.</string>
     <string name="error_while_adding_to_widget">There is an error occurred during operation. This recipe might have already been added.</string>
+    <string name="error_while_removing_from_widget">There is an error occurred during operation. This recipe might have already been removed.</string>
 
     <!-- Extra Recipe Step Text -->
     <string name="first_step_text">Welcome!</string>
@@ -44,6 +46,7 @@
     <string name="about_menu_text">About</string>
     <string name="licence_menu_text">Licence</string>
     <string name="add_to_widget_menu_text">Add to widget</string>
+    <string name="remove_from_widget_menu_text">Remove from widget</string>
 
     <!-- Step & Ingredients Texts -->
     <string name="ingredients_title">Ingredients</string>

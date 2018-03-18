@@ -39,8 +39,6 @@ public class App extends Application {
 
         mUserAgent = Util.getUserAgent(this, Constants.EXO_PLAYER_USER_AGENT);
 
-        deleteDatabase(Constants.DATABASE_NAME);
-
         app = this;
     }
 

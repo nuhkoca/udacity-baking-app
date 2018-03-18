@@ -11,8 +11,6 @@ import com.nuhkoca.udacitybakingapp.R;
 import com.nuhkoca.udacitybakingapp.provider.BakingContract;
 import com.nuhkoca.udacitybakingapp.provider.BakingProvider;
 
-import timber.log.Timber;
-
 /**
  * Created by nuhkoca on 3/17/18.
  */
@@ -70,28 +68,22 @@ public class GridWidgetService extends RemoteViewsService {
             mCursor.moveToPosition(i);
 
             int foodNameIndex = mCursor.getColumnIndex(BakingContract.COLUMN_FOOD_NAME);
-            int quantityIndex = mCursor.getColumnIndex(BakingContract.COLUMN_QUANTITY_MEASURE);
-            int ingredientsIndex = mCursor.getColumnIndex(BakingContract.COLUMN_INGREDIENTS);
+            int quantityIndex = mCursor.getColumnIndex(BakingContract.COLUMN_QUANTITY_MEASURE_INGREDIENTS);
 
             String foodName = mCursor.getString(foodNameIndex);
             String quantity = mCursor.getString(quantityIndex);
-            String ingredients = mCursor.getString(ingredientsIndex);
-
 
             RemoteViews remoteViews = new RemoteViews(mContext.getPackageName(), R.layout.ingredients_widget_item);
 
             remoteViews.setTextViewText(R.id.tvWidgetRecipeName, foodName);
             remoteViews.setViewVisibility(R.id.tvWidgetRecipeName, View.VISIBLE);
 
-            remoteViews.setTextViewText(R.id.tvWidgetIngQuantity, quantity);
-            remoteViews.setViewVisibility(R.id.tvWidgetIngQuantity, View.VISIBLE);
-
-            remoteViews.setTextViewText(R.id.tvWidgetIngName, ingredients);
-            remoteViews.setViewVisibility(R.id.tvWidgetIngName, View.VISIBLE);
-
+            remoteViews.setTextViewText(R.id.tvWidgetRecipeDetails, quantity);
+            remoteViews.setViewVisibility(R.id.tvWidgetRecipeDetails, View.VISIBLE);
 
             Intent fillIntent = new Intent();
             remoteViews.setOnClickFillInIntent(R.id.tvWidgetRecipeName, fillIntent);
+            remoteViews.setOnClickFillInIntent(R.id.tvWidgetRecipeDetails, fillIntent);
 
             return remoteViews;
         }

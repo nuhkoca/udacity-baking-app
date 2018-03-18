@@ -14,10 +14,14 @@ import android.widget.RemoteViews;
 import com.nuhkoca.udacitybakingapp.R;
 import com.nuhkoca.udacitybakingapp.view.recipe.activity.RecipeActivity;
 
+import java.util.Objects;
+
 /**
  * Implementation of App Widget functionality.
  */
 public class BakingWidgetProvider extends AppWidgetProvider {
+
+    private static final String INTENT_UPDATE_ACTION = "android.appwidget.action.APPWIDGET_UPDATE";
 
     void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                          int appWidgetId) {
@@ -74,13 +78,16 @@ public class BakingWidgetProvider extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
         if (intent != null) {
-            if ("android.appwidget.action.APPWIDGET_UPDATE".equals(intent.getAction())) {
+            if (Objects.equals(INTENT_UPDATE_ACTION, intent.getAction())) {
                 AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-                int[] appwidgetIds = appWidgetManager.getAppWidgetIds(
-                        new ComponentName(context, getClass())
-                );
-                appWidgetManager.notifyAppWidgetViewDataChanged(appwidgetIds, R.id.gvRecipeWidget);
-                onUpdate(context, appWidgetManager, appwidgetIds);
+                ComponentName thisWidget = new ComponentName(context.getApplicationContext(), BakingWidgetProvider.class);
+                int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
+
+                RemoteViews remoteViews = getRecipesFromGridView(context);
+
+                appWidgetManager.updateAppWidget(appWidgetIds, remoteViews);
+                appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.gvRecipeWidget);
+                onUpdate(context, appWidgetManager, appWidgetIds);
             }
         }
     }

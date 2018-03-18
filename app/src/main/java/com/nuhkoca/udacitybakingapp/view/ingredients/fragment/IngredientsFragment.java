@@ -2,7 +2,6 @@ package com.nuhkoca.udacitybakingapp.view.ingredients.fragment;
 
 
 import android.content.ContentValues;
-import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -52,8 +51,6 @@ import com.nuhkoca.udacitybakingapp.view.ingredients.adapter.IngredientsAdapter;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import timber.log.Timber;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -131,6 +128,10 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
         switch (itemThatWasClicked) {
             case R.id.add_widget:
                 mIngredientsFragmentPresenter.addItemsInDatabase();
+                return true;
+
+            case R.id.remove_widget:
+                mIngredientsFragmentPresenter.removeItemsFromDatabase();
                 return true;
         }
 
@@ -276,26 +277,25 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
     @Override
     public void onItemsAddedInDatabase() {
         List<String> quantities = new ArrayList<>();
-        List<String> ingredients = new ArrayList<>();
 
         for (int i = 0; i < mRecipeResponse.getIngredients().size(); i++) {
             quantities.add(String.valueOf(mRecipeResponse.getIngredients().get(i).getQuantity()) + " "
-                    + mRecipeResponse.getIngredients().get(i).getMeasure());
-
-            ingredients.add(mRecipeResponse.getIngredients().get(i).getIngredient());
+                    + mRecipeResponse.getIngredients().get(i).getMeasure() + " x " +
+                    mRecipeResponse.getIngredients().get(i).getIngredient());
         }
 
-        String quantityAndMeasure = TextUtils.join(", ", quantities);
-        String ingredient = TextUtils.join(", ", ingredients);
+        String quantityAndMeasure = TextUtils.join("\n", quantities);
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(BakingContract.COLUMN_FOOD_NAME, mRecipeResponse.getName());
-        contentValues.put(BakingContract.COLUMN_QUANTITY_MEASURE, quantityAndMeasure);
-        contentValues.put(BakingContract.COLUMN_INGREDIENTS, ingredient);
-
+        contentValues.put(BakingContract.COLUMN_QUANTITY_MEASURE_INGREDIENTS, quantityAndMeasure);
 
         new MyCustomDatabaseSplicer(contentValues).execute();
-        new MyCustomDatabaseSplicer1().execute();
+    }
+
+    @Override
+    public void onItemsRemovedFromDatabase() {
+        new MyCustomDatabaseRemover().execute();
     }
 
     private static class MyCustomDatabaseSplicer extends AsyncTask<Void, Void, Uri> {
@@ -327,34 +327,28 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
         }
     }
 
-    private static class MyCustomDatabaseSplicer1 extends AsyncTask<Void, Void, Cursor> {
+    private static class MyCustomDatabaseRemover extends AsyncTask<Void, Void, Integer> {
+        MyCustomDatabaseRemover() {}
 
         @Override
-        protected Cursor doInBackground(Void... voids) {
+        protected Integer doInBackground(Void... voids) {
             try {
-                return App.getInstance().getContentResolver().query(
-                        BakingProvider.BakingIngredients.CONTENT_URI, null, null, null, null);
+                Uri uri = BakingProvider.BakingIngredients.CONTENT_URI;
+
+                return App.getInstance().getContentResolver().delete(uri, "foodName = ?", new String[]{"" + mRecipeName});
             } catch (Exception e) {
-                return null;
+                return -1;
             }
         }
 
         @Override
-        protected void onPostExecute(Cursor cursor) {
-            cursor.moveToFirst();
-
-            int foodId = cursor.getColumnIndex(BakingContract.COLUMN_FOOD_NAME);
-            int quantityId = cursor.getColumnIndex(BakingContract.COLUMN_QUANTITY_MEASURE);
-            int ingId = cursor.getColumnIndex(BakingContract.COLUMN_INGREDIENTS);
-
-            while (!cursor.isAfterLast()) {
-                String food = cursor.getString(foodId);
-                String quantity = cursor.getString(quantityId);
-                String ing = cursor.getString(ingId);
-
-                Timber.d(food + " " + quantity + " " + ing);
-                cursor.moveToNext();
-
+        protected void onPostExecute(Integer integer) {
+            if (integer > 0) {
+                Toast.makeText(App.getInstance().getApplicationContext(),
+                        String.format(App.getInstance().getString(R.string.remove_from_widget), mRecipeName), Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(App.getInstance().getApplicationContext(),
+                        App.getInstance().getString(R.string.error_while_removing_from_widget), Toast.LENGTH_SHORT).show();
             }
         }
     }

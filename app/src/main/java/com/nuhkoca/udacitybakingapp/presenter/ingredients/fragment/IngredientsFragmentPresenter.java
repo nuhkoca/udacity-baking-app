@@ -13,5 +13,7 @@ public interface IngredientsFragmentPresenter {
 
     void addItemsInDatabase();
 
+    void removeItemsFromDatabase();
+
     void destroyView();
 }
