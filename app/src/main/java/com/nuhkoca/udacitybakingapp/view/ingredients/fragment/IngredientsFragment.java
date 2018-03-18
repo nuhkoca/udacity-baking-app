@@ -5,7 +5,6 @@ import android.content.ContentValues;
 import android.databinding.DataBindingUtil;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,7 +17,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
@@ -41,11 +39,11 @@ import com.nuhkoca.udacitybakingapp.BR;
 import com.nuhkoca.udacitybakingapp.R;
 import com.nuhkoca.udacitybakingapp.databinding.FragmentIngredientsBinding;
 import com.nuhkoca.udacitybakingapp.helper.Constants;
+import com.nuhkoca.udacitybakingapp.helper.DatabaseHandler;
 import com.nuhkoca.udacitybakingapp.model.RecipeResponse;
 import com.nuhkoca.udacitybakingapp.presenter.ingredients.fragment.IngredientsFragmentPresenter;
 import com.nuhkoca.udacitybakingapp.presenter.ingredients.fragment.IngredientsFragmentPresenterImpl;
 import com.nuhkoca.udacitybakingapp.provider.BakingContract;
-import com.nuhkoca.udacitybakingapp.provider.BakingProvider;
 import com.nuhkoca.udacitybakingapp.view.ingredients.adapter.IngredientsAdapter;
 
 import java.io.File;
@@ -63,8 +61,6 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
     private int mWhichItem;
     private static long mVideoPosition;
     private static boolean mShouldAutoPlay;
-
-    private static String mRecipeName;
 
     private SimpleExoPlayer mExoPlayer;
     private DataSource.Factory mMediaDataSourceFactory;
@@ -133,6 +129,9 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
             case R.id.remove_widget:
                 mIngredientsFragmentPresenter.removeItemsFromDatabase();
                 return true;
+
+            default:
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -142,9 +141,6 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
     public void onIngredientsLoaded() {
         if (getArguments() != null) {
             mRecipeResponse = getArguments().getParcelable(Constants.RECIPE_MODEL_INTENT_EXTRA);
-            if (mRecipeResponse != null) {
-                mRecipeName = mRecipeResponse.getName();
-            }
             mWhichItem = getArguments().getInt(Constants.RECIPE_MODEL_STEPS_ID_INTENT_EXTRA);
         }
 
@@ -290,67 +286,12 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
         contentValues.put(BakingContract.COLUMN_FOOD_NAME, mRecipeResponse.getName());
         contentValues.put(BakingContract.COLUMN_QUANTITY_MEASURE_INGREDIENTS, quantityAndMeasure);
 
-        new MyCustomDatabaseSplicer(contentValues).execute();
+        new DatabaseHandler.Splicer(contentValues, mRecipeResponse.getName()).execute();
     }
 
     @Override
     public void onItemsRemovedFromDatabase() {
-        new MyCustomDatabaseRemover().execute();
-    }
-
-    private static class MyCustomDatabaseSplicer extends AsyncTask<Void, Void, Uri> {
-
-        private ContentValues contentValues;
-
-        MyCustomDatabaseSplicer(ContentValues contentValues) {
-            this.contentValues = contentValues;
-        }
-
-        @Override
-        protected Uri doInBackground(Void... voids) {
-            try {
-                return App.getInstance().getContentResolver().insert(BakingProvider.BakingIngredients.CONTENT_URI, contentValues);
-            } catch (Exception e) {
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Uri uri) {
-            if (uri != null) {
-                Toast.makeText(App.getInstance().getApplicationContext(),
-                        String.format(App.getInstance().getString(R.string.added_to_widget), mRecipeName), Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(App.getInstance().getApplicationContext(),
-                        App.getInstance().getString(R.string.error_while_adding_to_widget), Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    private static class MyCustomDatabaseRemover extends AsyncTask<Void, Void, Integer> {
-        MyCustomDatabaseRemover() {}
-
-        @Override
-        protected Integer doInBackground(Void... voids) {
-            try {
-                Uri uri = BakingProvider.BakingIngredients.CONTENT_URI;
-
-                return App.getInstance().getContentResolver().delete(uri, "foodName = ?", new String[]{"" + mRecipeName});
-            } catch (Exception e) {
-                return -1;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Integer integer) {
-            if (integer > 0) {
-                Toast.makeText(App.getInstance().getApplicationContext(),
-                        String.format(App.getInstance().getString(R.string.remove_from_widget), mRecipeName), Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(App.getInstance().getApplicationContext(),
-                        App.getInstance().getString(R.string.error_while_removing_from_widget), Toast.LENGTH_SHORT).show();
-            }
-        }
+        new DatabaseHandler.Remover(mRecipeResponse.getName()).execute();
     }
 
     @Override

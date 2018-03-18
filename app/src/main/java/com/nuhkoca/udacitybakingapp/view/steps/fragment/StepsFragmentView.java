@@ -6,4 +6,8 @@ package com.nuhkoca.udacitybakingapp.view.steps.fragment;
 
 public interface StepsFragmentView {
     void onStepsLoaded();
+
+    void onItemsAddedToDatabase();
+
+    void onItemsRemovedFromDatabase();
 }

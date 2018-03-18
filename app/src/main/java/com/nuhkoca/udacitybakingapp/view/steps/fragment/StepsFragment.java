@@ -1,6 +1,7 @@
 package com.nuhkoca.udacitybakingapp.view.steps.fragment;
 
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -9,7 +10,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -21,10 +26,14 @@ import com.nuhkoca.udacitybakingapp.R;
 import com.nuhkoca.udacitybakingapp.callback.IStepTabletCallbackListener;
 import com.nuhkoca.udacitybakingapp.databinding.FragmentStepsBinding;
 import com.nuhkoca.udacitybakingapp.helper.Constants;
+import com.nuhkoca.udacitybakingapp.helper.DatabaseHandler;
 import com.nuhkoca.udacitybakingapp.model.RecipeResponse;
 import com.nuhkoca.udacitybakingapp.presenter.steps.fragment.StepsFragmentPresenter;
 import com.nuhkoca.udacitybakingapp.presenter.steps.fragment.StepsFragmentPresenterImpl;
+import com.nuhkoca.udacitybakingapp.provider.BakingContract;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import moe.feng.common.stepperview.IStepperAdapter;
@@ -56,12 +65,48 @@ public class StepsFragment extends Fragment implements StepsFragmentView, IStepp
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (getResources().getBoolean(R.bool.isTablet)){
+            setHasOptionsMenu(true);
+        }
+    }
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         mFragmentStepsBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_steps, container, false);
 
         return mFragmentStepsBinding.getRoot();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.ingredient_menu, menu);
+
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemThatWasClicked = item.getItemId();
+
+        switch (itemThatWasClicked){
+            case R.id.add_widget:
+                mStepsFragmentPresenter.addItemsToDatabase();
+                return true;
+
+            case R.id.remove_widget:
+                mStepsFragmentPresenter.removeItemsFromDatabase();
+                return true;
+
+                default:
+                    break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -80,6 +125,30 @@ public class StepsFragment extends Fragment implements StepsFragmentView, IStepp
             mRecipeResponse = getArguments().getParcelable(Constants.RECIPE_MODEL_INTENT_EXTRA);
             mFragmentStepsBinding.vsvSteps.setStepperAdapter(this);
         }
+    }
+
+    @Override
+    public void onItemsAddedToDatabase() {
+        List<String> quantities = new ArrayList<>();
+
+        for (int i = 0; i < mRecipeResponse.getIngredients().size(); i++) {
+            quantities.add(String.valueOf(mRecipeResponse.getIngredients().get(i).getQuantity()) + " "
+                    + mRecipeResponse.getIngredients().get(i).getMeasure() + " x " +
+                    mRecipeResponse.getIngredients().get(i).getIngredient());
+        }
+
+        String quantityAndMeasure = TextUtils.join("\n", quantities);
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(BakingContract.COLUMN_FOOD_NAME, mRecipeResponse.getName());
+        contentValues.put(BakingContract.COLUMN_QUANTITY_MEASURE_INGREDIENTS, quantityAndMeasure);
+
+        new DatabaseHandler.Splicer(contentValues, mRecipeResponse.getName()).execute();
+    }
+
+    @Override
+    public void onItemsRemovedFromDatabase() {
+        new DatabaseHandler.Remover(mRecipeResponse.getName()).execute();
     }
 
     @Override
