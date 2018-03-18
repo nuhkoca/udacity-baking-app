@@ -46,8 +46,8 @@
         <item name="cardCornerRadius">4dp</item>
         <item name="cardBackgroundColor">@color/colorWhite</item>
         <item name="cardElevation">@dimen/dp4</item>
-        <item name="android:layout_marginStart">@dimen/dp16</item>
-        <item name="android:layout_marginEnd">@dimen/dp16</item>
+        <item name="android:layout_marginStart">@dimen/dp8</item>
+        <item name="android:layout_marginEnd">@dimen/dp8</item>
         <item name="android:layout_marginBottom">@dimen/dp8</item>
         <item name="android:layout_marginTop">@dimen/dp8</item>
     </style>
