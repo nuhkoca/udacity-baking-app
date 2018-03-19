@@ -2,6 +2,7 @@ package com.nuhkoca.udacitybakingapp.view.ingredients.fragment;
 
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -73,7 +74,6 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
 
     private static final DefaultBandwidthMeter BANDWIDTH_METER = new DefaultBandwidthMeter();
 
-
     public static IngredientsFragment getInstance(RecipeResponse recipeResponse, int whichItem) {
         IngredientsFragment ingredientsFragment = new IngredientsFragment();
 
@@ -87,23 +87,16 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        if (!getResources().getBoolean(R.bool.isTablet)) {
-            setHasOptionsMenu(true);
-        }
-    }
-
-    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         mFragmentIngredientsBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_ingredients, container, false);
 
-        if (savedInstanceState == null){
+        if (savedInstanceState == null) {
             mShouldAutoPlay = true;
         }
+
+        setHasOptionsMenu(true);
 
         return mFragmentIngredientsBinding.getRoot();
     }
@@ -172,8 +165,7 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
                 break;
         }
 
-        if (TextUtils.isEmpty(mRecipeResponse.getSteps().get(mWhichItem).getThumbnailURL()) &&
-                TextUtils.isEmpty(mRecipeResponse.getSteps().get(mWhichItem).getVideoURL())) {
+        if (TextUtils.isEmpty(mRecipeResponse.getSteps().get(mWhichItem).getVideoURL())) {
             mFragmentIngredientsBinding.sepvIngredients.setDefaultArtwork(BitmapFactory.decodeResource(
                     getResources(), resId));
         }
@@ -194,8 +186,7 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
 
         String formattedStepTitle;
 
-        if (!TextUtils.isEmpty(mRecipeResponse.getSteps().get(mWhichItem).getVideoURL())
-                || !TextUtils.isEmpty(mRecipeResponse.getSteps().get(mWhichItem).getThumbnailURL())) {
+        if (!TextUtils.isEmpty(mRecipeResponse.getSteps().get(mWhichItem).getVideoURL())) {
             formattedStepTitle = String.format(getString(R.string.step_title_place_holder),
                     mRecipeResponse.getSteps().get(mWhichItem).getShortDescription());
         } else {
@@ -349,6 +340,14 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
         if (Util.SDK_INT <= 23 || mExoPlayer == null) {
             mIngredientsFragmentPresenter.initializePlayer();
         }
+
+        mIngredientsFragmentPresenter = new IngredientsFragmentPresenterImpl(this);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mIngredientsFragmentPresenter = new IngredientsFragmentPresenterImpl(this);
     }
 
     @Override

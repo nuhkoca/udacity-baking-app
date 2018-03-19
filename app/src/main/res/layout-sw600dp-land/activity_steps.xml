@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include android:id="@+id/lStepsToolbar"
+            layout="@layout/toolbar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:baselineAligned="false"
+        android:orientation="horizontal"
+        tools:context=".view.steps.activity.StepsActivity">
+
+        <FrameLayout
+            android:id="@+id/flStepsFragmentHolder"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="match_parent" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/material_blue_500" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:paddingBottom="@dimen/dp16"
+            android:paddingLeft="@dimen/dp16"
+            android:layout_gravity="center"
+            android:paddingRight="@dimen/dp16"
+            android:paddingTop="@dimen/dp16">
+
+            <FrameLayout
+                android:id="@+id/flStepIngredientsHolder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="centerInside"/>
+
+        </LinearLayout>
+    </LinearLayout>
+    </LinearLayout>
+
+</layout>
+
+

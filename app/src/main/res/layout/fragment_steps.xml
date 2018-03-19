@@ -2,11 +2,18 @@
 <layout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <FrameLayout
+        android:id="@+id/flSteps"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
     <moe.feng.common.stepperview.VerticalStepperView
         android:id="@+id/vsvSteps"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:step_done_icon="@drawable/ic_done_white_16dp"
         app:step_animation_duration="@android:integer/config_mediumAnimTime"/>
+
+    </FrameLayout>
 
 </layout>

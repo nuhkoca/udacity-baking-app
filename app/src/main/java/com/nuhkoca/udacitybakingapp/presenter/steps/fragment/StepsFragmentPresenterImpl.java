@@ -20,16 +20,6 @@ public class StepsFragmentPresenterImpl implements StepsFragmentPresenter {
     }
 
     @Override
-    public void addItemsToDatabase() {
-        mStepsFragmentView.onItemsAddedToDatabase();
-    }
-
-    @Override
-    public void removeItemsFromDatabase() {
-        mStepsFragmentView.onItemsRemovedFromDatabase();
-    }
-
-    @Override
     public void destroyView() {
         if (mStepsFragmentView != null) {
             mStepsFragmentView = null;

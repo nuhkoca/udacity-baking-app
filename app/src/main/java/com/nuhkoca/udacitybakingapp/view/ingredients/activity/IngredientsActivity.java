@@ -1,5 +1,6 @@
 package com.nuhkoca.udacitybakingapp.view.ingredients.activity;
 
+import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -11,6 +12,7 @@ import com.nuhkoca.udacitybakingapp.helper.Constants;
 import com.nuhkoca.udacitybakingapp.model.RecipeResponse;
 import com.nuhkoca.udacitybakingapp.presenter.ingredients.activity.IngredientsActivityPresenter;
 import com.nuhkoca.udacitybakingapp.presenter.ingredients.activity.IngredientsActivityPresenterImpl;
+import com.nuhkoca.udacitybakingapp.util.ConfigurationDetector;
 import com.nuhkoca.udacitybakingapp.view.ingredients.fragment.IngredientsFragment;
 
 public class IngredientsActivity extends AppCompatActivity implements IngredientsActivityView {
@@ -29,6 +31,12 @@ public class IngredientsActivity extends AppCompatActivity implements Ingredient
 
         if (savedInstanceState == null) {
             mIngredientsActivityPresenter.attachFragment();
+        }
+
+        int mOrientation = ConfigurationDetector.isTabletInLandscapeMode(this);
+
+        if (getResources().getBoolean(R.bool.isTablet) && mOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+            finish();
         }
     }
 
@@ -63,7 +71,6 @@ public class IngredientsActivity extends AppCompatActivity implements Ingredient
 
     @Override
     public void onFragmentAttached() {
-
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.flIngredientsHolder, IngredientsFragment.getInstance(mRecipeResponse, mWhichItem))
                 .commit();

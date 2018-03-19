@@ -7,9 +7,5 @@ package com.nuhkoca.udacitybakingapp.presenter.steps.fragment;
 public interface StepsFragmentPresenter {
     void loadSteps();
 
-    void addItemsToDatabase();
-
-    void removeItemsFromDatabase();
-
     void destroyView();
 }
