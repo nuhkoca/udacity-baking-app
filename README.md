@@ -8,7 +8,7 @@ This project is the third task of the Android Nanodegree Scholarship. Allows use
 
 # What the project uses
 
-* MVP Pattern
+* [MVPPattern](https://github.com/MindorksOpenSource/android-mvp-architecture)
 * [BindingAdapter](https://developer.android.com/reference/android/databinding/BindingAdapter.html)
 * [Retrofit2](https://github.com/square/retrofit)
 * [RxJava2](https://github.com/ReactiveX/RxJava)
