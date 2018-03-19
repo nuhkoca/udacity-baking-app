@@ -1,23 +1,27 @@
 # Udacity Baking App
-This project is the third task of the Android Nanodegree Scholarship.
+
+![App Logo](https://github.com/nuhkoca/udacity-baking-app/blob/master/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png)
+
+This project is the third task of the Android Nanodegree Scholarship. Allows users to playback media, add and remove items to/from widget and so on.
 
 <b>Please note;</b> Base URL is hidden due to the security purpose. It should be placed in to `gradle.properties.`
 
 # What the project uses
 
-* MVP Pattern
-* BindingAdapter
-* Retrofit2
-* RxJava2
-* Glidev4
-* GlideModule
-* Timber
-* Okhttp
-* DataBinding
-* SQLite
-* Schematic
-* Widgets
-* ExoPlayer
+* [MVPPattern](https://github.com/MindorksOpenSource/android-mvp-architecture)
+* [BindingAdapter](https://developer.android.com/reference/android/databinding/BindingAdapter.html)
+* [Retrofit2](https://github.com/square/retrofit)
+* [RxJava2](https://github.com/ReactiveX/RxJava)
+* [Glidev4](https://github.com/bumptech/glide)
+* [GlideModule](http://bumptech.github.io/glide/doc/generatedapi.html#availability)
+* [Timber](https://github.com/JakeWharton/timber)
+* [Okhttp](https://github.com/square/okhttp)
+* [DataBinding](https://developer.android.com/topic/libraries/data-binding/index.html)
+* [SQLite](https://www.sqlite.org/index.html)
+* [Schematic](https://github.com/SimonVT/schematic)
+* [Widgets](https://developer.android.com/guide/topics/appwidgets/index.html)
+* [ExoPlayer](https://github.com/google/ExoPlayer)
+* [Blurry](https://github.com/wasabeef/Blurry)
 
 # ToDo List
 
@@ -26,6 +30,7 @@ This project is the third task of the Android Nanodegree Scholarship.
 - [x] Recipe videos are played with ExoPlayer.
 - [x] Recipes are added to database when clicking on widget button.
 - [x] Two pane support for tablets.
+- [x] Add favorite recipes to database or remove from.
 
 
 # License
