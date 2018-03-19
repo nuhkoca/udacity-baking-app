@@ -1,6 +1,7 @@
 package com.nuhkoca.udacitybakingapp.view.steps.activity;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -53,6 +54,10 @@ public class StepsActivity extends AppCompatActivity implements StepsActivityVie
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowHomeEnabled(true);
         }
+
+        if (getResources().getBoolean(R.bool.isTablet)) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+        }
     }
 
     @Override
@@ -85,7 +90,6 @@ public class StepsActivity extends AppCompatActivity implements StepsActivityVie
     @Override
     protected void onResume() {
         mStepsActivityPresenter = new StepsActivityPresenterImpl(this);
-
         super.onResume();
     }
 

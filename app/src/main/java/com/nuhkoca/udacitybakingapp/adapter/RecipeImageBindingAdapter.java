@@ -49,6 +49,7 @@ public class RecipeImageBindingAdapter {
                     .listener(requestListener(pbRecipe))
                     .into(recipeImageView);
 
+
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {

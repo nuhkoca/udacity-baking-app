@@ -13,7 +13,7 @@ public class Constants {
     public static final String RECIPE_MODEL_INTENT_EXTRA = "recipe-model-intent-extra";
     public static final String RECIPE_MODEL_STEPS_ID_INTENT_EXTRA = "recipe-model-video-id-intent-extra";
     public static final int CHILD_ACTIVITY_REQUEST_CODE = 1453;
-    public static final int MILLISECOND_TO_BLUR = 500;
+    public static final int MILLISECOND_TO_BLUR = 600;
     public static final int RADIUS_BLUR = 10;
     public static final int SAMPLING_BLUR = 2;
     public static final int ANIMATE_BLUR = 1000;
@@ -28,6 +28,8 @@ public class Constants {
     public static final int SCREEN_WIDTH_PIXEL_CONDITION = 1440;
     public static final String FRAGMENT_ORDER = "fragment-order";
     public static final String DATABASE_NAME = "mybaking.db";
+    public static final String STEP_COUNT_STATE = "step-count-state";
+    public static final String LAST_STEP_CLICKED_STATE = "last-step-clicked-state";
 
     public Constants() {
         throw new AssertionError();

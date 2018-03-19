@@ -44,11 +44,16 @@ import com.nuhkoca.udacitybakingapp.model.RecipeResponse;
 import com.nuhkoca.udacitybakingapp.presenter.ingredients.fragment.IngredientsFragmentPresenter;
 import com.nuhkoca.udacitybakingapp.presenter.ingredients.fragment.IngredientsFragmentPresenterImpl;
 import com.nuhkoca.udacitybakingapp.provider.BakingContract;
+import com.nuhkoca.udacitybakingapp.util.SnackbarPopper;
 import com.nuhkoca.udacitybakingapp.view.ingredients.adapter.IngredientsAdapter;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+
+import timber.log.Timber;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -167,8 +172,11 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
                 break;
         }
 
-        mFragmentIngredientsBinding.sepvIngredients.setDefaultArtwork(BitmapFactory.decodeResource(
-                getResources(), resId));
+        if (TextUtils.isEmpty(mRecipeResponse.getSteps().get(mWhichItem).getThumbnailURL()) &&
+                TextUtils.isEmpty(mRecipeResponse.getSteps().get(mWhichItem).getVideoURL())) {
+            mFragmentIngredientsBinding.sepvIngredients.setDefaultArtwork(BitmapFactory.decodeResource(
+                    getResources(), resId));
+        }
 
         mMediaDataSourceFactory = buildDataSourceFactory(true);
         mFragmentIngredientsBinding.sepvIngredients.requestFocus();
@@ -186,10 +194,8 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
 
         String formattedStepTitle;
 
-        if (!mRecipeResponse.getSteps().get(mWhichItem).getVideoURL().equals("")) {
-            formattedStepTitle = String.format(getString(R.string.step_title_place_holder),
-                    mRecipeResponse.getSteps().get(mWhichItem).getShortDescription());
-        } else if (!mRecipeResponse.getSteps().get(mWhichItem).getThumbnailURL().equals("")) {
+        if (!TextUtils.isEmpty(mRecipeResponse.getSteps().get(mWhichItem).getVideoURL())
+                || !TextUtils.isEmpty(mRecipeResponse.getSteps().get(mWhichItem).getThumbnailURL())) {
             formattedStepTitle = String.format(getString(R.string.step_title_place_holder),
                     mRecipeResponse.getSteps().get(mWhichItem).getShortDescription());
         } else {
@@ -223,12 +229,17 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
 
             mExoPlayer.setPlayWhenReady(mShouldAutoPlay);
 
+
+            // Load video url, if it is not found, load thumbnail url instead
+
+            String videoOrThumbnailUrl;
             if (!TextUtils.isEmpty(mRecipeResponse.getSteps().get(mWhichItem).getVideoURL())) {
-                mExoPlayer.prepare(buildMediaSource(Uri.parse(mRecipeResponse.getSteps().get(mWhichItem).getVideoURL())));
+                videoOrThumbnailUrl = mRecipeResponse.getSteps().get(mWhichItem).getVideoURL();
             } else {
-                mExoPlayer.prepare(buildMediaSource(Uri.parse(mRecipeResponse.getSteps().get(mWhichItem).getThumbnailURL())));
+                videoOrThumbnailUrl = mRecipeResponse.getSteps().get(mWhichItem).getThumbnailURL();
             }
 
+            mExoPlayer.prepare(buildMediaSource(Uri.parse(videoOrThumbnailUrl)));
             mExoPlayer.seekTo(mVideoPosition);
         }
     }
@@ -286,12 +297,42 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
         contentValues.put(BakingContract.COLUMN_FOOD_NAME, mRecipeResponse.getName());
         contentValues.put(BakingContract.COLUMN_QUANTITY_MEASURE_INGREDIENTS, quantityAndMeasure);
 
-        new DatabaseHandler.Splicer(contentValues, mRecipeResponse.getName()).execute();
+        Uri returnedValue = null;
+
+        try {
+            returnedValue = new DatabaseHandler.Splicer(contentValues).execute().get();
+        } catch (InterruptedException | ExecutionException e) {
+            Timber.d(Arrays.toString(e.getStackTrace()));
+        }
+
+        if (returnedValue != null) {
+            SnackbarPopper.pop(mFragmentIngredientsBinding.llIngredientsMain,
+                    String.format(getString(R.string.added_to_widget), mRecipeResponse.getName()));
+        } else {
+            SnackbarPopper.pop(mFragmentIngredientsBinding.llIngredientsMain,
+                    getString(R.string.error_while_adding_to_widget));
+        }
     }
 
     @Override
     public void onItemsRemovedFromDatabase() {
-        new DatabaseHandler.Remover(mRecipeResponse.getName()).execute();
+        int returnedValue = 0;
+
+        try {
+            returnedValue = new DatabaseHandler.
+                    Remover(mRecipeResponse.getName()).
+                    execute().get();
+        } catch (InterruptedException | ExecutionException e) {
+            Timber.d(Arrays.toString(e.getStackTrace()));
+        }
+
+        if (returnedValue > 0) {
+            SnackbarPopper.pop(mFragmentIngredientsBinding.llIngredientsMain,
+                    String.format(getString(R.string.remove_from_widget), mRecipeResponse.getName()));
+        } else {
+            SnackbarPopper.pop(mFragmentIngredientsBinding.llIngredientsMain,
+                    getString(R.string.error_while_removing_from_widget));
+        }
     }
 
     @Override

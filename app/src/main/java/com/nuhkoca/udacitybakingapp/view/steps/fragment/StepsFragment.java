@@ -47,8 +47,8 @@ public class StepsFragment extends Fragment implements StepsFragmentView, IStepp
     private FragmentStepsBinding mFragmentStepsBinding;
     private StepsFragmentPresenter mStepsFragmentPresenter;
     private RecipeResponse mRecipeResponse;
-    private int mStepCount;
-    private boolean mIsClicked;
+    private static int mStepCount;
+    private static boolean mIsClicked;
 
     private static IStepTabletCallbackListener mIStepTabletCallbackListener;
 
@@ -70,6 +70,11 @@ public class StepsFragment extends Fragment implements StepsFragmentView, IStepp
 
         if (getResources().getBoolean(R.bool.isTablet)){
             setHasOptionsMenu(true);
+        }
+
+        if (savedInstanceState == null){
+            mStepCount = 0;
+            mIsClicked = false;
         }
     }
 
@@ -111,9 +116,6 @@ public class StepsFragment extends Fragment implements StepsFragmentView, IStepp
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        mStepCount = 0;
-        mIsClicked = false;
-
         mStepsFragmentPresenter = new StepsFragmentPresenterImpl(this);
         mStepsFragmentPresenter.loadSteps();
     }
@@ -121,29 +123,29 @@ public class StepsFragment extends Fragment implements StepsFragmentView, IStepp
     @Override
     public void onStepsLoaded() {
         if (getArguments() != null) {
-
             mRecipeResponse = getArguments().getParcelable(Constants.RECIPE_MODEL_INTENT_EXTRA);
             mFragmentStepsBinding.vsvSteps.setStepperAdapter(this);
+            mFragmentStepsBinding.vsvSteps.setCurrentStep(mStepCount);
         }
     }
 
     @Override
     public void onItemsAddedToDatabase() {
-        List<String> quantities = new ArrayList<>();
+        List<String> quantitiesMeasuresIngredients = new ArrayList<>();
 
         for (int i = 0; i < mRecipeResponse.getIngredients().size(); i++) {
-            quantities.add(String.valueOf(mRecipeResponse.getIngredients().get(i).getQuantity()) + " "
+            quantitiesMeasuresIngredients.add(String.valueOf(mRecipeResponse.getIngredients().get(i).getQuantity()) + " "
                     + mRecipeResponse.getIngredients().get(i).getMeasure() + " x " +
                     mRecipeResponse.getIngredients().get(i).getIngredient());
         }
 
-        String quantityAndMeasure = TextUtils.join("\n", quantities);
+        String quantityMeasureIngredients = TextUtils.join("\n", quantitiesMeasuresIngredients);
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(BakingContract.COLUMN_FOOD_NAME, mRecipeResponse.getName());
-        contentValues.put(BakingContract.COLUMN_QUANTITY_MEASURE_INGREDIENTS, quantityAndMeasure);
+        contentValues.put(BakingContract.COLUMN_QUANTITY_MEASURE_INGREDIENTS, quantityMeasureIngredients);
 
-        new DatabaseHandler.Splicer(contentValues, mRecipeResponse.getName()).execute();
+        new DatabaseHandler.Splicer(contentValues).execute();
     }
 
     @Override
@@ -268,7 +270,7 @@ public class StepsFragment extends Fragment implements StepsFragmentView, IStepp
 
         if (mStepCount == 0) {
             if (getResources().getBoolean(R.bool.isTablet)) {
-                mIStepTabletCallbackListener.onTutorialScreensActivated(true, i);
+                mIStepTabletCallbackListener.onTutorialScreensActivated(true, mStepCount);
             }
 
             prevButton.setVisibility(View.GONE);
@@ -309,5 +311,23 @@ public class StepsFragment extends Fragment implements StepsFragmentView, IStepp
     @Override
     public void onHide(int i) {
 
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putInt(Constants.STEP_COUNT_STATE, mStepCount);
+        outState.putBoolean(Constants.LAST_STEP_CLICKED_STATE, mIsClicked);
+
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+
+        if (savedInstanceState!=null){
+            mStepCount = savedInstanceState.getInt(Constants.STEP_COUNT_STATE);
+            mIsClicked = savedInstanceState.getBoolean(Constants.LAST_STEP_CLICKED_STATE);
+        }
     }
 }

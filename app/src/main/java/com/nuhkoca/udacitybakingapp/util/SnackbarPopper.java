@@ -1,5 +1,6 @@
 package com.nuhkoca.udacitybakingapp.util;
 
+import android.graphics.Typeface;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
@@ -45,7 +46,8 @@ public class SnackbarPopper {
         currentView.setBackgroundColor(ContextCompat.getColor(currentView.getContext(), R.color.colorPrimary));
 
         TextView currentText = currentView.findViewById(android.support.design.R.id.snackbar_text);
-        currentText.setTextSize(16);
+        currentText.setTextSize(14);
+        currentText.setTypeface(Typeface.SANS_SERIF);
         currentText.setTextColor(ContextCompat.getColor(view.getContext(), R.color.colorWhite));
 
         return snackbar;

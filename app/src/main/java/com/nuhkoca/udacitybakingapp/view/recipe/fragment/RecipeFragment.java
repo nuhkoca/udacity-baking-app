@@ -2,7 +2,6 @@ package com.nuhkoca.udacitybakingapp.view.recipe.fragment;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -110,6 +109,9 @@ public class RecipeFragment extends Fragment implements RecipeFragmentView, IRec
         }
 
         mFragmentPresenter.fetchRecipes();
+
+        mProgressRecipeVisibility = View.VISIBLE;
+        mFragmentRecipeBinding.pbRecipes.setVisibility(mProgressRecipeVisibility);
     }
 
     @Override
@@ -177,6 +179,13 @@ public class RecipeFragment extends Fragment implements RecipeFragmentView, IRec
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        mFragmentPresenter = new RecipeFragmentPresenterImpl(this);
+        mIErrorCallbackListener = (IErrorCallbackListener) getActivity();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         mFragmentPresenter = new RecipeFragmentPresenterImpl(this);
         mIErrorCallbackListener = (IErrorCallbackListener) getActivity();
     }
