@@ -31,6 +31,8 @@ This project is the third task of the Android Nanodegree Scholarship. Allows use
 - [x] Recipes are added to database when clicking on widget button.
 - [x] Two pane support for tablets.
 - [x] Add favorite recipes to database or remove from.
+- [x] Cache videos to prevent from reloading.
+- [X] Tablet-exclusive Step UI, like welcome screen for the first step and clap screen for the last step.
 
 
 # License
