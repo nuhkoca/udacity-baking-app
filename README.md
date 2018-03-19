@@ -37,6 +37,10 @@ This project is the third task of the Android Nanodegree Scholarship. Allows use
 
 # License
 
+App icon based on:
+
+Icons made by Freepik from www.flaticon.com is licensed by CC 3.0 BY
+
 ```
 MIT License
 
