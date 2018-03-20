@@ -65,6 +65,7 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
     private IngredientsFragmentPresenter mIngredientsFragmentPresenter;
     private RecipeResponse mRecipeResponse;
     private int mWhichItem;
+    private int mResId = 0;
     private static long mVideoPosition;
     private static boolean mShouldAutoPlay;
 
@@ -142,23 +143,21 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
             mWhichItem = getArguments().getInt(Constants.RECIPE_MODEL_STEPS_ID_INTENT_EXTRA);
         }
 
-        int resId = 0;
-
         switch (mRecipeResponse.getName()) {
             case Constants.NUTELLA_PIE_CASE:
-                resId = R.drawable.nutella_pie;
+                mResId = R.drawable.nutella_pie;
                 break;
 
             case Constants.BROWNIES_CASE:
-                resId = R.drawable.brownies;
+                mResId = R.drawable.brownies;
                 break;
 
             case Constants.YELLOW_CAKE_CASE:
-                resId = R.drawable.yellow_cake;
+                mResId = R.drawable.yellow_cake;
                 break;
 
             case Constants.CHEESECAKE_CASE:
-                resId = R.drawable.cheesecake;
+                mResId = R.drawable.cheesecake;
                 break;
 
             default:
@@ -167,7 +166,7 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
 
         if (TextUtils.isEmpty(mRecipeResponse.getSteps().get(mWhichItem).getVideoURL())) {
             mFragmentIngredientsBinding.pvIngredients.setDefaultArtwork(BitmapFactory.decodeResource(
-                    getResources(), resId));
+                    getResources(), mResId));
         }
 
         mMediaDataSourceFactory = buildDataSourceFactory(true);
@@ -224,6 +223,33 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
             String videoUrl = "";
             if (!TextUtils.isEmpty(mRecipeResponse.getSteps().get(mWhichItem).getVideoURL())) {
                 videoUrl = mRecipeResponse.getSteps().get(mWhichItem).getVideoURL();
+            }
+
+            if (!TextUtils.isEmpty(mRecipeResponse.getSteps().get(mWhichItem).getThumbnailURL())
+                    || TextUtils.isEmpty(mRecipeResponse.getSteps().get(mWhichItem).getThumbnailURL())){
+                switch (mRecipeResponse.getName()) {
+                    case Constants.NUTELLA_PIE_CASE:
+                        mResId = R.drawable.nutella_pie;
+                        break;
+
+                    case Constants.BROWNIES_CASE:
+                        mResId = R.drawable.brownies;
+                        break;
+
+                    case Constants.YELLOW_CAKE_CASE:
+                        mResId = R.drawable.yellow_cake;
+                        break;
+
+                    case Constants.CHEESECAKE_CASE:
+                        mResId = R.drawable.cheesecake;
+                        break;
+
+                    default:
+                        break;
+                }
+
+                    mFragmentIngredientsBinding.pvIngredients.setDefaultArtwork(BitmapFactory.decodeResource(
+                            getResources(), mResId));
             }
 
             mExoPlayer.prepare(buildMediaSource(Uri.parse(videoUrl)));
