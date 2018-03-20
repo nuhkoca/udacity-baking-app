@@ -5,7 +5,7 @@
     <string name="imageview_place_holder">This is a placeholder for ImageViews.</string>
     <string name="serving_text_place_holder">%1$d servings</string>
     <string name="step_title_place_holder">You are now watching the %1$s step.</string>
-    <string name="step_title_error_place_holder">There is no video found. It is enough that following the ingredients and description below!</string>
+    <string name="step_title_error_place_holder">There is no video found. It is enough that following the ingredients and description below! You are now on the %1$s step.</string>
     <string name="ingredients_counter_place_holder">%1$d ingredients</string>
 
     <!-- Error Messages -->
@@ -25,6 +25,7 @@
     <string name="remove_from_widget">%1$s was successfully removed from widget.</string>
     <string name="error_while_adding_to_widget">This recipe might have already been added.</string>
     <string name="error_while_removing_from_widget">This recipe might have already been removed.</string>
+    <string name="empty_widget_text">As it seems, you don\'t have any recipe at the moment. If you want to have one now, just click on the button below and add a recipe in your list!</string>
 
     <!-- Extra Recipe Step Text -->
     <string name="first_step_text">Welcome!</string>

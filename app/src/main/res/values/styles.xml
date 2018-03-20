@@ -145,8 +145,8 @@
 
 
     <!-- Error Button Theme -->
-    <style name="ErrorViewAppearance" />
-    <style name="ErrorViewAppearance.Button">
+    <style name="BlueButtonViewAppearance" />
+    <style name="BlueButtonViewAppearance.Button">
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
         <item name="android:textColor">@color/colorWhite</item>

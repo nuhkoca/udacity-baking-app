@@ -56,11 +56,7 @@ public class GridWidgetService extends RemoteViewsService {
 
         @Override
         public int getCount() {
-            if (mCursor == null) {
-                return 0;
-            }
-
-            return mCursor.getCount();
+            return (mCursor != null) ? mCursor.getCount(): 0;
         }
 
         @Override

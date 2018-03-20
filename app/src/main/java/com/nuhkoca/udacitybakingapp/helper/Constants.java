@@ -30,6 +30,7 @@ public class Constants {
     public static final String DATABASE_NAME = "mybaking.db";
     public static final String STEP_COUNT_STATE = "step-count-state";
     public static final String LAST_STEP_CLICKED_STATE = "last-step-clicked-state";
+    public static final int EXO_PLAYER_VIDEO_CACHE_DURATION = 10 * 1024 * 1024;
 
     public Constants() {
         throw new AssertionError();

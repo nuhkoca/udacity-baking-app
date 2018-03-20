@@ -166,12 +166,12 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
         }
 
         if (TextUtils.isEmpty(mRecipeResponse.getSteps().get(mWhichItem).getVideoURL())) {
-            mFragmentIngredientsBinding.sepvIngredients.setDefaultArtwork(BitmapFactory.decodeResource(
+            mFragmentIngredientsBinding.pvIngredients.setDefaultArtwork(BitmapFactory.decodeResource(
                     getResources(), resId));
         }
 
         mMediaDataSourceFactory = buildDataSourceFactory(true);
-        mFragmentIngredientsBinding.sepvIngredients.requestFocus();
+        mFragmentIngredientsBinding.pvIngredients.requestFocus();
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         mFragmentIngredientsBinding.rvIngredients.setLayoutManager(linearLayoutManager);
@@ -190,7 +190,7 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
             formattedStepTitle = String.format(getString(R.string.step_title_place_holder),
                     mRecipeResponse.getSteps().get(mWhichItem).getShortDescription());
         } else {
-            formattedStepTitle = getString(R.string.step_title_error_place_holder);
+            formattedStepTitle = String.format(getString(R.string.step_title_error_place_holder), mRecipeResponse.getSteps().get(mWhichItem).getShortDescription());
         }
 
         String formattedIngredientCounter = String.format(getString(R.string.ingredients_counter_place_holder),
@@ -216,21 +216,17 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
             LoadControl loadControl = new DefaultLoadControl();
 
             mExoPlayer = ExoPlayerFactory.newSimpleInstance(renderersFactory, mTrackSelector, loadControl);
-            mFragmentIngredientsBinding.sepvIngredients.setPlayer(mExoPlayer);
+            mFragmentIngredientsBinding.pvIngredients.setPlayer(mExoPlayer);
 
             mExoPlayer.setPlayWhenReady(mShouldAutoPlay);
 
 
-            // Load video url, if it is not found, load thumbnail url instead
-
-            String videoOrThumbnailUrl;
+            String videoUrl = "";
             if (!TextUtils.isEmpty(mRecipeResponse.getSteps().get(mWhichItem).getVideoURL())) {
-                videoOrThumbnailUrl = mRecipeResponse.getSteps().get(mWhichItem).getVideoURL();
-            } else {
-                videoOrThumbnailUrl = mRecipeResponse.getSteps().get(mWhichItem).getThumbnailURL();
+                videoUrl = mRecipeResponse.getSteps().get(mWhichItem).getVideoURL();
             }
 
-            mExoPlayer.prepare(buildMediaSource(Uri.parse(videoOrThumbnailUrl)));
+            mExoPlayer.prepare(buildMediaSource(Uri.parse(videoUrl)));
             mExoPlayer.seekTo(mVideoPosition);
         }
     }
@@ -239,13 +235,13 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
         return new DataSource.Factory() {
             @Override
             public DataSource createDataSource() {
-                LeastRecentlyUsedCacheEvictor evictor = new LeastRecentlyUsedCacheEvictor(100 * 1024 * 1024);
+                LeastRecentlyUsedCacheEvictor evictor = new LeastRecentlyUsedCacheEvictor(Constants.EXO_PLAYER_VIDEO_CACHE_DURATION);
 
                 if (getActivity() != null && getContext() != null) {
                     SimpleCache simpleCache = new SimpleCache(new File(getActivity().getCacheDir(), "media_cache"), evictor);
                     return new CacheDataSource(simpleCache, ((App) getContext().getApplicationContext()).buildDataSourceFactory(useBandwidthMeter ? BANDWIDTH_METER : null).createDataSource(),
                             CacheDataSource.FLAG_BLOCK_ON_CACHE | CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR,
-                            10 * 1024 * 1024);
+                            Constants.EXO_PLAYER_VIDEO_CACHE_DURATION);
                 }
 
                 return null;

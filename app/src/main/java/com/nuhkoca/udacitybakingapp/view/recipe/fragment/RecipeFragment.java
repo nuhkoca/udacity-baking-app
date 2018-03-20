@@ -61,6 +61,11 @@ public class RecipeFragment extends Fragment implements RecipeFragmentView, IRec
         return mIdlingResource;
     }
 
+    @VisibleForTesting
+    public static RecipeFragment getInstance() {
+        return new RecipeFragment();
+    }
+
     public static RecipeFragment getInstance(IErrorCallbackListener iErrorCallbackListener) {
         mIErrorCallbackListener = iErrorCallbackListener;
 

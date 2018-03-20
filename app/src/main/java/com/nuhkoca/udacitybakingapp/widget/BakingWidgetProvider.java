@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.RemoteViews;
 
 import com.nuhkoca.udacitybakingapp.R;
@@ -40,6 +41,8 @@ public class BakingWidgetProvider extends AppWidgetProvider {
         Intent appIntent = new Intent(context, RecipeActivity.class);
         PendingIntent intent = PendingIntent.getActivity(context, 0, appIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         views.setPendingIntentTemplate(R.id.gvRecipeWidget, intent);
+
+        views.setEmptyView(R.id.gvRecipeWidget, R.id.llEmptyView);
 
         return views;
     }
