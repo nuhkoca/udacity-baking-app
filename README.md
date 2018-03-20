@@ -4,9 +4,10 @@
 
 This project is the third task of the Android Nanodegree Scholarship. Allows users to playback media, add and remove items to/from widget and so on.
 
+
 # What the project uses
 
-* [MVPPattern](https://github.com/MindorksOpenSource/android-mvp-architecture)
+* [MVP Pattern](https://github.com/MindorksOpenSource/android-mvp-architecture)
 * [BindingAdapter](https://developer.android.com/reference/android/databinding/BindingAdapter.html)
 * [Retrofit2](https://github.com/square/retrofit)
 * [RxJava2](https://github.com/ReactiveX/RxJava)
@@ -20,6 +21,7 @@ This project is the third task of the Android Nanodegree Scholarship. Allows use
 * [Widgets](https://developer.android.com/guide/topics/appwidgets/index.html)
 * [ExoPlayer](https://github.com/google/ExoPlayer)
 * [Blurry](https://github.com/wasabeef/Blurry)
+* [Stetho](https://github.com/facebook/stetho)
 
 # ToDo List
 
@@ -31,7 +33,26 @@ This project is the third task of the Android Nanodegree Scholarship. Allows use
 - [x] Add favorite recipes to database or remove from.
 - [x] Cache videos to prevent from reloading.
 - [X] Tablet-exclusive Step UI, like welcome screen for the first step and clap screen for the last step.
+- [x] App is tracked closely by Stetho.
 
+# Screenshots
+
+## Phone
+<p align="left">
+<img src="https://github.com/nuhkoca/udacity-baking-app/blob/master/art/phone_main.png" height="500"/>
+<img src="https://github.com/nuhkoca/udacity-baking-app/blob/master/art/phone_steps.png" height="500"/>
+<img src="https://github.com/nuhkoca/udacity-baking-app/blob/master/art/phone_ingredients.png" height="500"/>
+<img src="https://github.com/nuhkoca/udacity-baking-app/blob/master/art/error_page.png" height="500"/>
+<img src="https://github.com/nuhkoca/udacity-baking-app/blob/master/art/widget.png" height="500"/>
+</p>
+
+
+## Tablet
+
+<p align="left">
+  <img src="https://github.com/nuhkoca/udacity-baking-app/blob/master/art/tablet_main.png" width="700"/>
+  <img src="https://github.com/nuhkoca/udacity-baking-app/blob/master/art/tablet_steps.png" width="700"/>
+</p>
 
 # License
 
