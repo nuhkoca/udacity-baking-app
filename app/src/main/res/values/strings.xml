@@ -97,6 +97,7 @@
         <item name="exo_player">ExoPlayer</item>
         <item name="material_stepper">MaterialStepperView</item>
         <item name="schematic">schematic</item>
+        <item name="stetho">stetho</item>
     </string-array>
 
     <!-- Libraries Excluded -->

@@ -66,6 +66,9 @@ dependencies {
     implementation "io.reactivex:rxjava:$rootProject.ext.rxJavaVersion"
     implementation "io.reactivex:rxandroid:$rootProject.ext.rxAndroidVersion"
 
+    implementation "com.facebook.stetho:stetho:$rootProject.ext.stethoVersion"
+    implementation "com.facebook.stetho:stetho-okhttp3:$rootProject.ext.stethoVersion"
+
     androidTestImplementation "com.android.support:support-annotations:$rootProject.ext.supportLibraryVersion"
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$rootProject.ext.espressoVersion"
     androidTestImplementation "com.android.support.test:rules:$rootProject.ext.testVersion"

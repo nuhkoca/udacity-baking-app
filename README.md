@@ -4,8 +4,6 @@
 
 This project is the third task of the Android Nanodegree Scholarship. Allows users to playback media, add and remove items to/from widget and so on.
 
-<b>Please note;</b> Base URL is hidden due to the security purpose. It should be placed in to `gradle.properties.`
-
 # What the project uses
 
 * [MVPPattern](https://github.com/MindorksOpenSource/android-mvp-architecture)

@@ -1,5 +1,6 @@
 package com.nuhkoca.udacitybakingapp.helper;
 
+import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.nuhkoca.udacitybakingapp.BuildConfig;
@@ -24,6 +25,7 @@ public class RetrofitInterceptor {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addNetworkInterceptor(new StethoInterceptor());
         httpClient.interceptors().add(logging);
 
         return new Retrofit.Builder()
