@@ -16,6 +16,7 @@ import com.nuhkoca.udacitybakingapp.databinding.ActivityRecipeBinding;
 import com.nuhkoca.udacitybakingapp.helper.Constants;
 import com.nuhkoca.udacitybakingapp.presenter.recipe.activity.RecipeActivityPresenter;
 import com.nuhkoca.udacitybakingapp.presenter.recipe.activity.RecipeActivityPresenterImpl;
+import com.nuhkoca.udacitybakingapp.util.ConnectionSniffer;
 import com.nuhkoca.udacitybakingapp.view.about.AboutActivity;
 import com.nuhkoca.udacitybakingapp.view.other.ErrorFragment;
 import com.nuhkoca.udacitybakingapp.view.recipe.fragment.RecipeFragment;
@@ -43,7 +44,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeActivityV
     @Override
     public void onFragmentAttached() {
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.flRecipesHolder, RecipeFragment.getInstance(this))
+                .replace(R.id.flRecipesHolder, RecipeFragment.getInstance(this))
                 .commit();
     }
 
@@ -107,21 +108,24 @@ public class RecipeActivity extends AppCompatActivity implements RecipeActivityV
     @Override
     public void onErrorScreenShown(boolean visible) {
         if (visible) {
-            if (getResources().getBoolean(R.bool.isTablet)) {
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            } else {
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            }
-
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.flRecipesHolder, ErrorFragment.getInstance(this))
                     .commit();
-        } else {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        }
 
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+    }
+
+    @Override
+    public void onMainScreenShown(boolean visible) {
+        boolean isConnected = ConnectionSniffer.sniff(Constants.ENTIRE_URL);
+
+        if (visible && isConnected) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.flRecipesHolder, RecipeFragment.getInstance(this))
                     .commit();
         }
+
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
     }
 }

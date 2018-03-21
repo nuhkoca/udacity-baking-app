@@ -14,11 +14,25 @@
     android:orientation="vertical"
     tools:context="com.nuhkoca.udacitybakingapp.view.ingredients.fragment.IngredientsFragment">
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
     <com.google.android.exoplayer2.ui.PlayerView
         android:id="@+id/pvIngredients"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:resize_mode="fixed_width"/>
+
+        <ImageView
+            android:id="@+id/ivIngredients"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:visibility="gone"
+            android:contentDescription="@string/imageview_place_holder"
+            style="@style/IngredientsErrorImageViewAppearance"/>
+
+    </FrameLayout>
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -58,6 +72,7 @@
                         style="@style/StepAppearance.Header"/>
 
                     <TextView
+                        android:id="@+id/tvIngredientCount"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="3"

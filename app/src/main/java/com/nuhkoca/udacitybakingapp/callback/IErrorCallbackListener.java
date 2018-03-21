@@ -6,4 +6,5 @@ package com.nuhkoca.udacitybakingapp.callback;
 
 public interface IErrorCallbackListener {
     void onErrorScreenShown(boolean visible);
+    void onMainScreenShown(boolean visible);
 }

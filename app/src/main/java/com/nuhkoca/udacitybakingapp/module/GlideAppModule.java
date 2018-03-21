@@ -59,6 +59,7 @@ public class GlideAppModule extends AppGlideModule {
                 .signature(new ObjectKey(
                         System.currentTimeMillis() / (24 * 60 * 60 * 1000))) // 24hrs
                 .centerCrop()
+                .dontAnimate()
                 .encodeFormat(Bitmap.CompressFormat.PNG)
                 .encodeQuality(100)
                 .fallback(ContextCompat.getDrawable(context, R.drawable.ic_not_found))

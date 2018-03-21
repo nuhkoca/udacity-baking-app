@@ -62,6 +62,7 @@ public class RecipeFragment extends Fragment implements RecipeFragmentView, IRec
     }
 
     @VisibleForTesting
+    @NonNull
     public static RecipeFragment getInstance() {
         return new RecipeFragment();
     }

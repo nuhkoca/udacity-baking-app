@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import com.nuhkoca.udacitybakingapp.R;
 import com.nuhkoca.udacitybakingapp.callback.IErrorCallbackListener;
 import com.nuhkoca.udacitybakingapp.databinding.FragmentErrorBinding;
+import com.nuhkoca.udacitybakingapp.helper.Constants;
+import com.nuhkoca.udacitybakingapp.util.ConnectionSniffer;
 
 
 /**
@@ -23,6 +25,11 @@ public class ErrorFragment extends Fragment implements View.OnClickListener {
 
     private FragmentErrorBinding mFragmentErrorBinding;
     private static IErrorCallbackListener mIErrorCallbackListener;
+
+    public static ErrorFragment getInstance() {
+
+        return new ErrorFragment();
+    }
 
     public static ErrorFragment getInstance(IErrorCallbackListener iErrorCallbackListener) {
         mIErrorCallbackListener = iErrorCallbackListener;
@@ -45,7 +52,11 @@ public class ErrorFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        mIErrorCallbackListener.onErrorScreenShown(false);
+        boolean isConnected = ConnectionSniffer.sniff(Constants.ENTIRE_URL);
+
+        if (isConnected) {
+            mIErrorCallbackListener.onMainScreenShown(true);
+        }
     }
 
     @Override

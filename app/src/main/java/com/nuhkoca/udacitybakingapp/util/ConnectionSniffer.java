@@ -1,16 +1,11 @@
 package com.nuhkoca.udacitybakingapp.util;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 
-import com.nuhkoca.udacitybakingapp.App;
-import com.nuhkoca.udacitybakingapp.BuildConfig;
-import com.nuhkoca.udacitybakingapp.helper.Constants;
-
 import java.io.IOException;
-import java.net.InetAddress;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by nuhkoca on 3/13/18.
@@ -19,40 +14,46 @@ import java.net.InetAddress;
 public class ConnectionSniffer {
     private static boolean isReachable;
 
-    public static boolean sniff() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) App.getInstance().getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        NetworkInfo networkInfo = null;
-        if (connectivityManager != null) {
-            networkInfo = connectivityManager.getActiveNetworkInfo();
+    /**
+     *
+     * @param myUrl to check if server is alive
+     * @return true if there is an active connection. This sends pings to the target URL and if server responds, it returns true. This is different than check connectivity because if there is no connection even though you are on a Wifi, it nevertheless returns true.
+     */
+    public static boolean sniff(String myUrl) {
+        try {
+            isReachable = new Pinger(myUrl).execute().get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
         }
 
-        new MyConnectionSniffer().execute(BuildConfig.BASE_URL);
-
-        return networkInfo != null &&
-                networkInfo.isConnected() &&
-                networkInfo.isConnectedOrConnecting() &&
-                networkInfo.isAvailable() &&
-                !isReachable;
+        return isReachable;
     }
 
+    private static class Pinger extends AsyncTask<Void, Void, Boolean> {
 
-    private static class MyConnectionSniffer extends AsyncTask<String, Void, Boolean> {
+        private String myUrl;
+
+        Pinger(String myUrl) {
+            this.myUrl = myUrl;
+        }
+
         @Override
-        protected Boolean doInBackground(String... strings) {
-            String hostName = strings[0];
-
+        protected Boolean doInBackground(Void... voids) {
+            URL url;
             try {
-                return InetAddress.getByName(hostName).isReachable(Constants.NETWORK_TIMEOUT_DURATION);
+                url = new URL(myUrl);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+                httpURLConnection.setConnectTimeout(30000);
+                httpURLConnection.connect();
+                if (httpURLConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    return true;
+                }
             } catch (IOException e) {
                 return false;
             }
-        }
 
-        @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            super.onPostExecute(aBoolean);
-            isReachable = aBoolean;
+            return true;
         }
     }
 }

@@ -33,12 +33,12 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 @RunWith(AndroidJUnit4.class)
 public class RecipeAdapterItemOpensActivityTest {
 
-    private static final String ACTIVITY_PHONE_TITLE = "Steps";
-    private static final String ACTIVITY_TABLET_TITLE = "Steps & Ingredients";
+    private static final String ACTIVITY_PHONE_TITLE = getInstrumentation().getTargetContext().getResources().getString(R.string.steps_header);
+    private static final String ACTIVITY_TABLET_TITLE = getInstrumentation().getTargetContext().getResources().getString(R.string.steps_tablet_header);
 
     private IdlingResource mIdlingResource;
 
-    private int orientation = ConfigurationDetector.isTabletInLandscapeMode(getInstrumentation().getContext());
+    private int orientation = ConfigurationDetector.isTabletInLandscapeMode(getInstrumentation().getTargetContext());
 
     @Before
     public void registerIdlingResource() {

@@ -3,13 +3,20 @@ package com.nuhkoca.udacitybakingapp.view.ingredients.fragment;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.IdlingResource;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -18,9 +25,22 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.Request;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.ImageViewTarget;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.target.ThumbnailImageViewTarget;
+import com.bumptech.glide.request.target.ViewTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -29,6 +49,7 @@ import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
+import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
@@ -42,11 +63,16 @@ import com.nuhkoca.udacitybakingapp.databinding.FragmentIngredientsBinding;
 import com.nuhkoca.udacitybakingapp.helper.Constants;
 import com.nuhkoca.udacitybakingapp.helper.DatabaseHandler;
 import com.nuhkoca.udacitybakingapp.model.RecipeResponse;
+import com.nuhkoca.udacitybakingapp.module.GlideApp;
 import com.nuhkoca.udacitybakingapp.presenter.ingredients.fragment.IngredientsFragmentPresenter;
 import com.nuhkoca.udacitybakingapp.presenter.ingredients.fragment.IngredientsFragmentPresenterImpl;
 import com.nuhkoca.udacitybakingapp.provider.BakingContract;
+import com.nuhkoca.udacitybakingapp.test.SimpleIdlingResource;
+import com.nuhkoca.udacitybakingapp.util.ConfigurationDetector;
+import com.nuhkoca.udacitybakingapp.util.ConnectionSniffer;
 import com.nuhkoca.udacitybakingapp.util.SnackbarPopper;
 import com.nuhkoca.udacitybakingapp.view.ingredients.adapter.IngredientsAdapter;
+import com.nuhkoca.udacitybakingapp.view.recipe.fragment.RecipeFragment;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -73,7 +99,27 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
     private DataSource.Factory mMediaDataSourceFactory;
     private DefaultTrackSelector mTrackSelector;
 
+    private int mOrientation;
+
     private static final DefaultBandwidthMeter BANDWIDTH_METER = new DefaultBandwidthMeter();
+
+    @Nullable
+    private SimpleIdlingResource mIdlingResource;
+
+    @VisibleForTesting
+    @NonNull
+    public IdlingResource getIdlingResource() {
+        if (mIdlingResource == null) {
+            mIdlingResource = new SimpleIdlingResource();
+        }
+        return mIdlingResource;
+    }
+
+    @VisibleForTesting
+    @NonNull
+    public static IngredientsFragment getInstance() {
+        return new IngredientsFragment();
+    }
 
     public static IngredientsFragment getInstance(RecipeResponse recipeResponse, int whichItem) {
         IngredientsFragment ingredientsFragment = new IngredientsFragment();
@@ -88,6 +134,17 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        getIdlingResource();
+
+        if (mIdlingResource != null) {
+            mIdlingResource.setIdleState(false);
+        }
+    }
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
@@ -98,6 +155,7 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
         }
 
         setHasOptionsMenu(true);
+        mOrientation = ConfigurationDetector.isTabletInLandscapeMode(getActivity());
 
         return mFragmentIngredientsBinding.getRoot();
     }
@@ -164,9 +222,42 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
                 break;
         }
 
-        if (TextUtils.isEmpty(mRecipeResponse.getSteps().get(mWhichItem).getVideoURL())) {
-            mFragmentIngredientsBinding.pvIngredients.setDefaultArtwork(BitmapFactory.decodeResource(
-                    getResources(), mResId));
+        if (!TextUtils.isEmpty(mRecipeResponse.getSteps().get(mWhichItem).getVideoURL())) {
+            mFragmentIngredientsBinding.ivIngredients.setVisibility(View.GONE);
+            mFragmentIngredientsBinding.pvIngredients.setVisibility(View.VISIBLE);
+            mFragmentIngredientsBinding.pvIngredients.setUseController(true);
+
+        } else {
+
+            if (!getResources().getBoolean(R.bool.isTablet) || (getResources().getBoolean(R.bool.isTablet)
+                    || mOrientation == Configuration.ORIENTATION_PORTRAIT)) {
+
+                if (getActivity() != null) {
+                    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+                }
+            } else {
+                if (getActivity() != null) {
+                    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+                }
+            }
+
+            if (TextUtils.isEmpty(mRecipeResponse.getSteps().get(mWhichItem).getThumbnailURL())) {
+                mFragmentIngredientsBinding.ivIngredients.setVisibility(View.GONE);
+                mFragmentIngredientsBinding.pvIngredients.setVisibility(View.VISIBLE);
+                mFragmentIngredientsBinding.pvIngredients.setUseController(false);
+
+                mFragmentIngredientsBinding.pvIngredients.setDefaultArtwork(BitmapFactory.decodeResource(
+                        getResources(), mResId));
+            } else {
+                mFragmentIngredientsBinding.ivIngredients.setVisibility(View.VISIBLE);
+                mFragmentIngredientsBinding.pvIngredients.setVisibility(View.GONE);
+
+                if (getActivity() != null) {
+                    GlideApp.with(getActivity())
+                            .load(mRecipeResponse.getSteps().get(mWhichItem).getThumbnailURL())
+                            .into(mFragmentIngredientsBinding.ivIngredients);
+                }
+            }
         }
 
         mMediaDataSourceFactory = buildDataSourceFactory(true);
@@ -200,6 +291,10 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
         mFragmentIngredientsBinding.lStepsLayout.setVariable(BR.formattedStepTitle, formattedStepTitle);
 
         mFragmentIngredientsBinding.lStepsLayout.executePendingBindings();
+
+        if (mIdlingResource != null) {
+            mIdlingResource.setIdleState(true);
+        }
     }
 
     @Override
@@ -225,35 +320,12 @@ public class IngredientsFragment extends Fragment implements IngredientsFragment
                 videoUrl = mRecipeResponse.getSteps().get(mWhichItem).getVideoURL();
             }
 
-            if (!TextUtils.isEmpty(mRecipeResponse.getSteps().get(mWhichItem).getThumbnailURL())
-                    || TextUtils.isEmpty(mRecipeResponse.getSteps().get(mWhichItem).getThumbnailURL())){
-                switch (mRecipeResponse.getName()) {
-                    case Constants.NUTELLA_PIE_CASE:
-                        mResId = R.drawable.nutella_pie;
-                        break;
-
-                    case Constants.BROWNIES_CASE:
-                        mResId = R.drawable.brownies;
-                        break;
-
-                    case Constants.YELLOW_CAKE_CASE:
-                        mResId = R.drawable.yellow_cake;
-                        break;
-
-                    case Constants.CHEESECAKE_CASE:
-                        mResId = R.drawable.cheesecake;
-                        break;
-
-                    default:
-                        break;
-                }
-
-                    mFragmentIngredientsBinding.pvIngredients.setDefaultArtwork(BitmapFactory.decodeResource(
-                            getResources(), mResId));
-            }
-
             mExoPlayer.prepare(buildMediaSource(Uri.parse(videoUrl)));
             mExoPlayer.seekTo(mVideoPosition);
+        }
+
+        if (mIdlingResource != null) {
+            mIdlingResource.setIdleState(false);
         }
     }
 
