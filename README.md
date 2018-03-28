@@ -22,6 +22,7 @@ This project is the third task of the Android Nanodegree Scholarship. Allows use
 * [ExoPlayer](https://github.com/google/ExoPlayer)
 * [Blurry](https://github.com/wasabeef/Blurry)
 * [Stetho](https://github.com/facebook/stetho)
+* [Espresso](https://github.com/googlesamples/android-testing)
 
 # ToDo List
 
