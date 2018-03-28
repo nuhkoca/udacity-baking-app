@@ -64,6 +64,8 @@ public class App extends Application {
     private void initTimber() {
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
+        }else {
+            //TODO: add release tree
         }
     }
 
