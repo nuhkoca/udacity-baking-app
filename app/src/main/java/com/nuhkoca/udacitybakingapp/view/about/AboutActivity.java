@@ -24,6 +24,7 @@ import com.nuhkoca.udacitybakingapp.presenter.about.AboutActivityPresenter;
 import com.nuhkoca.udacitybakingapp.presenter.about.AboutActivityPresenterImpl;
 
 import java.util.Calendar;
+import java.util.Objects;
 
 import mehdi.sakout.aboutpage.AboutPage;
 import mehdi.sakout.aboutpage.Element;
@@ -44,7 +45,7 @@ public class AboutActivity extends AppCompatActivity implements AboutActivityVie
 
     @Override
     public void onFirstRun() {
-        setSupportActionBar(mActivityAboutBinding.lBakingAboutToolbar.toolbar);
+        setSupportActionBar(Objects.requireNonNull(mActivityAboutBinding.lBakingAboutToolbar).toolbar);
         setTitle("");
         mActivityAboutBinding.lBakingAboutToolbar.tvToolbarHeader.setText(getString(R.string.about_menu_text));
 

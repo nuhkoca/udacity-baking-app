@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.nuhkoca.udacitybakingapp">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -41,7 +42,8 @@
             android:name=".provider.generated.BakingProvider"
             android:authorities="com.nuhkoca.udacitybakingapp.provider.provider"
             android:exported="true"
-            android:syncable="true"/>
+            android:syncable="true"
+            tools:ignore="ExportedContentProvider" />
 
         <receiver android:name=".widget.BakingWidgetProvider">
             <intent-filter>

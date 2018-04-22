@@ -15,6 +15,8 @@ import com.nuhkoca.udacitybakingapp.presenter.ingredients.activity.IngredientsAc
 import com.nuhkoca.udacitybakingapp.util.ConfigurationDetector;
 import com.nuhkoca.udacitybakingapp.view.ingredients.fragment.IngredientsFragment;
 
+import java.util.Objects;
+
 public class IngredientsActivity extends AppCompatActivity implements IngredientsActivityView {
 
     private ActivityIngredientsBinding mActivityIngredientsBinding;
@@ -45,7 +47,7 @@ public class IngredientsActivity extends AppCompatActivity implements Ingredient
         mRecipeResponse = getIntent().getParcelableExtra(Constants.RECIPE_MODEL_INTENT_EXTRA);
         mWhichItem = getIntent().getIntExtra(Constants.RECIPE_MODEL_STEPS_ID_INTENT_EXTRA, 0);
 
-        setSupportActionBar(mActivityIngredientsBinding.lIngredientsToolbar.toolbar);
+        setSupportActionBar(Objects.requireNonNull(mActivityIngredientsBinding.lIngredientsToolbar).toolbar);
         setTitle("");
         mActivityIngredientsBinding.lIngredientsToolbar.tvToolbarHeader.setText(String.format(getString(R.string.ingredients_header),
                 mRecipeResponse.getName()));
