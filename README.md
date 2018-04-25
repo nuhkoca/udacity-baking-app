@@ -21,6 +21,7 @@ This project is the third task of the Android Nanodegree Scholarship. Allows use
 * [Widgets](https://developer.android.com/guide/topics/appwidgets/index.html)
 * [ExoPlayer](https://github.com/google/ExoPlayer)
 * [Blurry](https://github.com/wasabeef/Blurry)
+* [LeakCanary](https://github.com/square/leakcanary)
 * [Stetho](https://github.com/facebook/stetho)
 * [Espresso](https://github.com/googlesamples/android-testing)
 
