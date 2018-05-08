@@ -7,7 +7,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.1'
+        classpath 'com.android.tools.build:gradle:3.1.2'
         
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -28,7 +28,7 @@ ext {
     minSdkVersion = 21
     targetSdkVersion = 27
     supportLibraryVersion = '27.1.1'
-    espressoVersion = '3.0.1'
+    espressoVersion = '3.0.2'
     testVersion = '1.0.1'
     exoPlayerVersion = '2.7.1'
     okHttpVersion = '3.8.0'
@@ -39,7 +39,7 @@ ext {
     rxJavaLibraryVersion = '2.3.0'
     blurryVersion = '2.1.1'
     materialStepperVersion = '0.2.3'
-    aboutPageVersion = '1.2.2'
+    aboutPageVersion = '1.2.4'
     aboutLibrariesVersion = '6.0.6'
     JUnitVersion = '4.12'
     materialDialogsVersion = '0.9.6.0'
