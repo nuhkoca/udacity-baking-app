@@ -41,7 +41,7 @@ ext {
     blurryVersion = '2.1.1'
     materialStepperVersion = '0.2.3'
     aboutPageVersion = '1.2.4'
-    aboutLibrariesVersion = '6.0.6'
+    aboutLibrariesVersion = '6.2.3'
     JUnitVersion = '4.13.2'
     materialDialogsVersion = '0.9.6.0'
     shematicVersion = '0.7.0'
