@@ -39,7 +39,7 @@ ext {
     timberVersion = '4.7.1'
     rxJavaLibraryVersion = '2.9.0'
     blurryVersion = '2.1.1'
-    materialStepperVersion = '0.2.3'
+    materialStepperVersion = '0.2.5'
     aboutPageVersion = '1.2.4'
     aboutLibrariesVersion = '6.2.3'
     JUnitVersion = '4.13.2'
