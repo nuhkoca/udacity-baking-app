@@ -29,7 +29,7 @@ ext {
     targetSdkVersion = 27
     supportLibraryVersion = '27.1.1'
     espressoVersion = '3.0.2'
-    testVersion = '1.0.1'
+    testVersion = '1.0.2'
     exoPlayerVersion = '2.18.2'
     okHttpVersion = '3.14.9'
     leakCanaryVersion = '1.5.4'
