@@ -45,7 +45,7 @@ ext {
     JUnitVersion = '4.13.2'
     materialDialogsVersion = '0.9.6.0'
     shematicVersion = '0.7.0'
-    stethoVersion = '1.5.0'
+    stethoVersion = '1.6.0'
 }
 
 task clean(type: Delete) {
